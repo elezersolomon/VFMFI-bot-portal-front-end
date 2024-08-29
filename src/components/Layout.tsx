@@ -16,6 +16,8 @@ import {
   Paper,
 } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import { RootState } from "../store"; // Adjust the path as needed
 
 interface LayoutProps {
   links: { to: string; text: string }[];
@@ -25,7 +27,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ links, role }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
+  const userFirstName = useSelector((state: RootState) => state.user.username);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -48,8 +50,13 @@ const Layout: React.FC<LayoutProps> = ({ links, role }) => {
       <AppBar position="fixed" sx={{ width: "100%", zIndex: 1201 }}>
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1, pl: 2 }}>
-            {role === "admin" ? "Admin Panel" : "User"}
+            {role === "admin" ? "Admin Panel" : "User Panel"}
           </Typography>
+          {userFirstName && (
+            <Typography variant="h6" sx={{ mr: 2 }}>
+              {userFirstName}
+            </Typography>
+          )}
           <IconButton edge="end" color="inherit" onClick={handleMenu}>
             <AccountCircle />
           </IconButton>
@@ -90,12 +97,12 @@ const Layout: React.FC<LayoutProps> = ({ links, role }) => {
               key={link.to}
               elevation={3}
               sx={{
-                my: 1, // margin top and bottom
-                mx: 2, // margin left and right
-                bgcolor: "primary.light", // slightly lighter blue color
-                color: "primary.contrastText", // ensure text is visible
+                my: 1,
+                mx: 2,
+                bgcolor: "primary.light",
+                color: "primary.contrastText",
                 "&:hover": {
-                  boxShadow: 6, // increase shadow on hover for better feedback
+                  boxShadow: 6,
                 },
               }}
             >
