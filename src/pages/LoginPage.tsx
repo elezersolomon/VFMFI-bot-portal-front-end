@@ -1,62 +1,78 @@
-// src/pages/LoginPage.tsx
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import {
+  Button,
+  TextField,
+  Typography,
+  Container,
+  CssBaseline,
+  Paper,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Container, Typography } from "@mui/material";
-import { loginUser } from "../services/api";
-import { setUser } from "../store/userSlice";
+import { loginUser } from "../services/api"; // Adjust the path as needed
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const dispatch = useDispatch();
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     try {
       const response = await loginUser(username, password);
-      dispatch(setUser(response.user));
-
-      if (response.user.role === "admin") {
-        navigate("/admin");
+      if (response && response.token) {
+        // Handle successful login (e.g., save token, redirect)
+        navigate("/dashboard"); // Adjust as needed
       } else {
-        navigate("/user");
+        setError("Login failed. Please try again.");
       }
     } catch (err) {
-      setError("Invalid credentials");
+      setError("An error occurred. Please try again.");
     }
   };
 
   return (
-    <Container maxWidth="sm">
-      <Typography variant="h4" align="center" gutterBottom>
-        Login
-      </Typography>
-      <form onSubmit={handleSubmit}>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Paper elevation={3} style={{ padding: 20 }}>
+        <Typography component="h1" variant="h5">
+          Login
+        </Typography>
         <TextField
-          label="Username"
           variant="outlined"
-          fullWidth
           margin="normal"
+          required
+          fullWidth
+          label="Username"
+          autoComplete="username"
+          autoFocus
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
           label="Password"
           type="password"
-          variant="outlined"
-          fullWidth
-          margin="normal"
+          autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button type="submit" variant="contained" color="primary" fullWidth>
+        {error && (
+          <Typography color="error" variant="body2">
+            {error}
+          </Typography>
+        )}
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          onClick={handleLogin}
+        >
           Login
         </Button>
-        {error && <Typography color="error">{error}</Typography>}
-      </form>
+      </Paper>
     </Container>
   );
 };

@@ -1,7 +1,6 @@
 // src/pages/SettingsPage.tsx
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
-import { hashPassword } from "../utils/hashPassword";
 
 const SettingsPage: React.FC = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -23,9 +22,7 @@ const SettingsPage: React.FC = () => {
       return;
     }
 
-    const hashedPassword = await hashPassword(newPassword);
-    console.log("consoleData_ hashed password", hashedPassword);
-    console.log("Hashed Password:", hashedPassword);
+
 
     // Here you would typically send the hashed password to your server to update the user's password
     alert("Password updated successfully");

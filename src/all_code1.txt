@@ -1,0 +1,1268 @@
+
+File: \App.css
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+File: \App.test.tsx
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+
+File: \App.tsx
+// src/App.tsx
+import React from "react";
+
+function App() {
+  return <div className="App">{/* Your main app content */}</div>;
+}
+
+export default App;
+
+File: \index.css
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+File: \index.tsx
+// src/index.tsx
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { ThemeProvider } from "@mui/material/styles";
+import AppRoutes from "./routes";
+import store from "./store";
+import theme from "./theme";
+
+ReactDOM.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <AppRoutes />
+      </ThemeProvider>
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById("root")
+);
+
+File: \logo.svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 841.9 595.3"><g fill="#61DAFB"><path d="M666.3 296.5c0-32.5-40.7-63.3-103.1-82.4 14.4-63.6 8-114.2-20.2-130.4-6.5-3.8-14.1-5.6-22.4-5.6v22.3c4.6 0 8.3.9 11.4 2.6 13.6 7.8 19.5 37.5 14.9 75.7-1.1 9.4-2.9 19.3-5.1 29.4-19.6-4.8-41-8.5-63.5-10.9-13.5-18.5-27.5-35.3-41.6-50 32.6-30.3 63.2-46.9 84-46.9V78c-27.5 0-63.5 19.6-99.9 53.6-36.4-33.8-72.4-53.2-99.9-53.2v22.3c20.7 0 51.4 16.5 84 46.6-14 14.7-28 31.4-41.3 49.9-22.6 2.4-44 6.1-63.6 11-2.3-10-4-19.7-5.2-29-4.7-38.2 1.1-67.9 14.6-75.8 3-1.8 6.9-2.6 11.5-2.6V78.5c-8.4 0-16 1.8-22.6 5.6-28.1 16.2-34.4 66.7-19.9 130.1-62.2 19.2-102.7 49.9-102.7 82.3 0 32.5 40.7 63.3 103.1 82.4-14.4 63.6-8 114.2 20.2 130.4 6.5 3.8 14.1 5.6 22.5 5.6 27.5 0 63.5-19.6 99.9-53.6 36.4 33.8 72.4 53.2 99.9 53.2 8.4 0 16-1.8 22.6-5.6 28.1-16.2 34.4-66.7 19.9-130.1 62-19.1 102.5-49.9 102.5-82.3zm-130.2-66.7c-3.7 12.9-8.3 26.2-13.5 39.5-4.1-8-8.4-16-13.1-24-4.6-8-9.5-15.8-14.4-23.4 14.2 2.1 27.9 4.7 41 7.9zm-45.8 106.5c-7.8 13.5-15.8 26.3-24.1 38.2-14.9 1.3-30 2-45.2 2-15.1 0-30.2-.7-45-1.9-8.3-11.9-16.4-24.6-24.2-38-7.6-13.1-14.5-26.4-20.8-39.8 6.2-13.4 13.2-26.8 20.7-39.9 7.8-13.5 15.8-26.3 24.1-38.2 14.9-1.3 30-2 45.2-2 15.1 0 30.2.7 45 1.9 8.3 11.9 16.4 24.6 24.2 38 7.6 13.1 14.5 26.4 20.8 39.8-6.3 13.4-13.2 26.8-20.7 39.9zm32.3-13c5.4 13.4 10 26.8 13.8 39.8-13.1 3.2-26.9 5.9-41.2 8 4.9-7.7 9.8-15.6 14.4-23.7 4.6-8 8.9-16.1 13-24.1zM421.2 430c-9.3-9.6-18.6-20.3-27.8-32 9 .4 18.2.7 27.5.7 9.4 0 18.7-.2 27.8-.7-9 11.7-18.3 22.4-27.5 32zm-74.4-58.9c-14.2-2.1-27.9-4.7-41-7.9 3.7-12.9 8.3-26.2 13.5-39.5 4.1 8 8.4 16 13.1 24 4.7 8 9.5 15.8 14.4 23.4zM420.7 163c9.3 9.6 18.6 20.3 27.8 32-9-.4-18.2-.7-27.5-.7-9.4 0-18.7.2-27.8.7 9-11.7 18.3-22.4 27.5-32zm-74 58.9c-4.9 7.7-9.8 15.6-14.4 23.7-4.6 8-8.9 16-13 24-5.4-13.4-10-26.8-13.8-39.8 13.1-3.1 26.9-5.8 41.2-7.9zm-90.5 125.2c-35.4-15.1-58.3-34.9-58.3-50.6 0-15.7 22.9-35.6 58.3-50.6 8.6-3.7 18-7 27.7-10.1 5.7 19.6 13.2 40 22.5 60.9-9.2 20.8-16.6 41.1-22.2 60.6-9.9-3.1-19.3-6.5-28-10.2zM310 490c-13.6-7.8-19.5-37.5-14.9-75.7 1.1-9.4 2.9-19.3 5.1-29.4 19.6 4.8 41 8.5 63.5 10.9 13.5 18.5 27.5 35.3 41.6 50-32.6 30.3-63.2 46.9-84 46.9-4.5-.1-8.3-1-11.3-2.7zm237.2-76.2c4.7 38.2-1.1 67.9-14.6 75.8-3 1.8-6.9 2.6-11.5 2.6-20.7 0-51.4-16.5-84-46.6 14-14.7 28-31.4 41.3-49.9 22.6-2.4 44-6.1 63.6-11 2.3 10.1 4.1 19.8 5.2 29.1zm38.5-66.7c-8.6 3.7-18 7-27.7 10.1-5.7-19.6-13.2-40-22.5-60.9 9.2-20.8 16.6-41.1 22.2-60.6 9.9 3.1 19.3 6.5 28.1 10.2 35.4 15.1 58.3 34.9 58.3 50.6-.1 15.7-23 35.6-58.4 50.6zM320.8 78.4z"/><circle cx="420.9" cy="296.5" r="45.7"/><path d="M520.5 78.1z"/></g></svg>
+
+File: \react-app-env.d.ts
+/// <reference types="react-scripts" />
+
+File: \reportWebVitals.ts
+import { ReportHandler } from 'web-vitals';
+
+const reportWebVitals = (onPerfEntry?: ReportHandler) => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+      getFID(onPerfEntry);
+      getFCP(onPerfEntry);
+      getLCP(onPerfEntry);
+      getTTFB(onPerfEntry);
+    });
+  }
+};
+
+export default reportWebVitals;
+
+File: \routes.tsx
+// src/routes.tsx
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
+import AdminPanel from "./components/AdminPanel";
+import CreateUserPage from "./pages/CreateUserPage";
+import ListUsersPage from "./pages/ListUsersPage";
+import UserHomepage from "./pages/UserHomepage";
+import CustomersPage from "./pages/CustomersPage";
+import SettingsPage from "./pages/SettingsPage";
+import EditUserPage from "./pages/EditUserPage";
+import LoginPage from "./pages/LoginPage";
+
+const AppRoutes: React.FC = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<LoginPage />} />
+      <Route
+        path="/admin"
+        element={
+          <Layout
+            role="admin"
+            links={[
+              { to: "/admin/create-user", text: "Create User" },
+              { to: "/admin/list-users", text: "List Users" },
+            ]}
+          />
+        }
+      >
+        <Route path="create-user" element={<CreateUserPage />} />
+        <Route path="list-users" element={<ListUsersPage />} />
+        <Route path="edit-user/:id" element={<EditUserPage />} />
+        <Route path="settings" element={<SettingsPage />} />
+      </Route>
+      <Route
+        path="/user"
+        element={
+          <Layout
+            role="user"
+            links={[{ to: "/user/customers", text: "Customers" }]}
+          />
+        }
+      >
+        <Route path="customers" element={<CustomersPage />} />
+        <Route path="settings" element={<SettingsPage />} />
+      </Route>
+    </Routes>
+  </BrowserRouter>
+);
+
+export default AppRoutes;
+
+File: \setupTests.ts
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+
+File: \theme.ts
+import { createTheme } from "@mui/material/styles";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#1976d2",
+    },
+    secondary: {
+      main: "#dc004e",
+    },
+  },
+});
+
+export default theme;
+
+File: \clients\DB_Connection.ts
+import { error } from "console";
+import { Client } from "pg";
+
+async function setDBConnection(): Promise<Client> {
+  const client = new Client({
+    host: "localhost",
+    port: 5432,
+    user: "postgres",
+    password: "VFMFI",
+    database: "VFMFI_ChatBot_DB",
+  });
+
+  // Return a Promise that resolves to the connected client or an error
+  return new Promise((resolve, reject) => {
+    client.connect((error: any) => {
+      if (error) {
+        console.log("Error", "Database Connection Error", error);
+        reject(error); // Reject the Promise if there's an error
+      } else {
+        console.log("Success", "Database connected");
+        resolve(client); // Resolve the Promise with the connected client
+      }
+    });
+  });
+}
+const client = setDBConnection();
+export default client;
+
+File: \clients\Get.ts
+import { Client } from "pg"; // Ensure this is the correct import for your PostgreSQL client
+import client from "./DB_Connection"; // Adjust import according to your actual setup
+
+type TargetColumnsType = string[];
+
+const Select = async (
+  table: string,
+  targetColumns?: TargetColumnsType,
+  condition?: string
+): Promise<any[]> => {
+  try {
+    // Prepare target columns
+    const stringifiedTargetColumn =
+      targetColumns && targetColumns.length > 0
+        ? targetColumns.map((value) => `"${value}"`).join(", ")
+        : "*";
+
+    // Prepare condition
+    const conditionString = condition ? `WHERE ${condition}` : "";
+
+    // Create query
+    const query = `SELECT ${stringifiedTargetColumn} FROM "${table}" ${conditionString}`;
+
+    // Perform the query
+    const Client = await client; // Ensure `client` returns a `Client` instance
+    const result = await Client.query(query);
+
+    // Return rows
+    return result.rows;
+  } catch (error: any) {
+    console.error("Select error:", error.message);
+    throw new Error(error.message); // Throw error to be handled by calling code
+  }
+};
+
+export default Select;
+
+File: \clients\Interfaces.ts
+interface user {
+  telegramUserName: string;
+  telegramID: number;
+  userFName: string;
+  userLName: string;
+  phoneNumber: number;
+  isCustomer: boolean;
+}
+
+interface chatData {
+  telegramUserName: string;
+  telegramID: number;
+  data: {};
+}
+
+interface update {
+  table: string;
+  values: Record<string, any>;
+  condition: string;
+}
+
+interface feedback {
+  telegramUserName?: string;
+  feedback: string;
+  userID: number;
+  leadID: number;
+}
+
+interface lead {
+  telegramID: number;
+  vfclientID?: string;
+  userFName: string | undefined;
+  userLName: string | undefined;
+  PhoneNumber?: number;
+  telegramUserName: string | undefined;
+}
+
+export type { user, update, lead, feedback, chatData };
+
+File: \clients\Post.ts
+import { error } from "console";
+import client from "./DB_Connection";
+
+export default async function Post(
+  table: string,
+  values: any[],
+  columns: any[]
+) {
+  try {
+    let columnsArray: any = [];
+    let valuesArray: any = [];
+    if (columns.length != 0 && columns != undefined) {
+      columns?.map((value) => {
+        value.replace(/['"]/g, "");
+        columnsArray.push(`"${value}"`);
+      });
+      columnsArray = `(${columnsArray})`;
+    }
+    if (values.length != 0 && values != undefined) {
+      values?.map((value) => {
+        valuesArray.push(`'${value}'`);
+      });
+      valuesArray = `(${valuesArray})`;
+    }
+    const Client = await client;
+
+    let query = `INSERT INTO "${table}" ${columnsArray} VALUES ${valuesArray}`;
+    let res = await Client.query(query);
+
+    return res;
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+File: \clients\sampleClients.js
+
+File: \clients\Update.ts
+import client from "./DB_Connection";
+import { update } from "./Interfaces";
+export default async function Update({ table, values, condition }: update) {
+  try {
+    const Client = await client;
+
+    const setClause = Object.entries(values)
+      .map(([key, value]) => `"${key}" = ${value}`)
+      .join(", ");
+
+    const query = `UPDATE "${table}" SET ${setClause} WHERE ${condition}`;
+    const res = await Client.query(query);
+    return res;
+  } catch (error) {
+    console.error("update error", error);
+    throw error;
+  }
+}
+
+File: \components\AdminPanel.tsx
+// src/components/AdminPanel.tsx
+import React from "react";
+import Layout from "./Layout";
+
+const AdminPanel: React.FC = () => {
+  const adminLinks = [
+    { to: "create-user", text: "Create User" },
+    { to: "list-users", text: "List Users" },
+  ];
+
+  return <Layout links={adminLinks} role={"admin"} />;
+};
+
+export default AdminPanel;
+
+File: \components\Layout.tsx
+import React, { useState } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Container,
+  IconButton,
+  Menu,
+  MenuItem,
+  Paper,
+} from "@mui/material";
+import { AccountCircle } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import { RootState } from "../store"; // Adjust the path as needed
+
+interface LayoutProps {
+  links: { to: string; text: string }[];
+  role: string;
+}
+
+const Layout: React.FC<LayoutProps> = ({ links, role }) => {
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const userFirstName = useSelector((state: RootState) => state.user.username);
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    navigate("/");
+  };
+
+  const handleSettings = () => {
+    navigate(`/${role}/settings`);
+    setAnchorEl(null);
+  };
+
+  return (
+    <Box sx={{ display: "flex" }}>
+      <AppBar position="fixed" sx={{ width: "100%", zIndex: 1201 }}>
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1, pl: 2 }}>
+            {role === "admin" ? "Admin Panel" : "User Panel"}
+          </Typography>
+          {userFirstName && (
+            <Typography variant="h6" sx={{ mr: 2 }}>
+              {userFirstName}
+            </Typography>
+          )}
+          <IconButton edge="end" color="inherit" onClick={handleMenu}>
+            <AccountCircle />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            keepMounted
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleSettings}>Settings</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
+        </Toolbar>
+      </AppBar>
+
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: 240,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: 240,
+            boxSizing: "border-box",
+            top: "64px",
+            bgcolor: "primary.main",
+            color: "primary.contrastText",
+            zIndex: 1100,
+            boxShadow: 3,
+          },
+        }}
+      >
+        <List>
+          {links.map((link) => (
+            <Paper
+              key={link.to}
+              elevation={3}
+              sx={{
+                my: 1,
+                mx: 2,
+                bgcolor: "primary.light",
+                color: "primary.contrastText",
+                "&:hover": {
+                  boxShadow: 6,
+                },
+              }}
+            >
+              <ListItem button component={Link} to={link.to}>
+                <ListItemText primary={link.text} sx={{ pl: 4 }} />
+              </ListItem>
+            </Paper>
+          ))}
+        </List>
+      </Drawer>
+
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          bgcolor: "background.default",
+          p: 3,
+          mt: "64px",
+          ml: "240px",
+        }}
+      >
+        <Container
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            height: "calc(100vh - 64px)",
+            width: "100%",
+          }}
+        >
+          <Box
+            sx={{
+              p: 4,
+              bgcolor: "background.paper",
+              boxShadow: 3,
+              borderRadius: 2,
+              width: "100%",
+              maxWidth: 1500,
+            }}
+          >
+            <Outlet />
+          </Box>
+        </Container>
+      </Box>
+    </Box>
+  );
+};
+
+export default Layout;
+
+File: \components\UserPanel.tsx
+// src/components/UserPanel.tsx
+import React from "react";
+import Layout from "./Layout";
+
+const UserPanel: React.FC = () => {
+  const userLinks = [{ to: "list-customers", text: "List Customers" }];
+
+  return <Layout links={userLinks} role={"admin"} />;
+};
+
+export default UserPanel;
+
+File: \pages\AdminPage.tsx
+// src/pages/AdminPage.tsx
+import React from "react";
+import { useForm } from "react-hook-form";
+import { Button, TextField, Container, Typography, Box } from "@mui/material";
+
+const AdminPage: React.FC = () => {
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = (data: any) => {
+    // Handle user creation logic
+    console.log("User created:", data);
+  };
+
+  return (
+    <Container maxWidth="sm">
+      <Box mt={8}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Admin Page
+        </Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <TextField
+            {...register("username")}
+            label="Username"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            required
+          />
+          <TextField
+            {...register("password")}
+            type="password"
+            label="Password"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            required
+          />
+          <Button type="submit" variant="contained" color="primary" fullWidth>
+            Create User
+          </Button>
+        </form>
+      </Box>
+    </Container>
+  );
+};
+
+export default AdminPage;
+
+File: \pages\CreateUserPage.tsx
+// src/pages/CreateUserPage.tsx
+import React, { useState } from "react";
+import { Box, Button, TextField, MenuItem, Typography } from "@mui/material";
+
+const CreateUserPage: React.FC = () => {
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
+
+  const handleCreateUser = () => {
+    // Logic to create user
+    console.log({ name, username, phone, password, role });
+  };
+
+  return (
+    <Box>
+      <Typography variant="h4" gutterBottom>
+        Create User
+      </Typography>
+      <TextField
+        label="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Phone Number"
+        type="number"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Password"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        select
+        label="Role"
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+        fullWidth
+        margin="normal"
+      >
+        <MenuItem value="admin">Admin</MenuItem>
+        <MenuItem value="user">User</MenuItem>
+      </TextField>
+      <Button variant="contained" color="primary" onClick={handleCreateUser}>
+        Create User
+      </Button>
+    </Box>
+  );
+};
+
+export default CreateUserPage;
+
+File: \pages\CustomersPage.tsx
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Checkbox,
+} from "@mui/material";
+
+interface Customer {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  telegramUsername: string;
+  address: string;
+  isVFClient: boolean;
+  contacted: boolean;
+}
+
+const CustomersPage: React.FC = () => {
+  const [customers, setCustomers] = useState<Customer[]>([]);
+
+  useEffect(() => {
+    fetch("/customers.json")
+      .then((response) => response.json())
+      .then((data) => setCustomers(data))
+      .catch((error) => console.error("Error fetching customers:", error));
+  }, []);
+
+  const handleCheckboxChange = (index: number) => {
+    const updatedCustomers = [...customers];
+    updatedCustomers[index].contacted = !updatedCustomers[index].contacted;
+    setCustomers(updatedCustomers);
+    // You can add logic here to update the server if needed
+  };
+
+  return (
+    <Box>
+      <Typography variant="h4" gutterBottom>
+        Customers
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>First Name</TableCell>
+              <TableCell>Last Name</TableCell>
+              <TableCell>Phone Number</TableCell>
+              <TableCell>Telegram Username</TableCell>
+              <TableCell>Address</TableCell>
+              <TableCell>VF Client</TableCell>
+              <TableCell>Contacted</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {customers.map((customer, index) => (
+              <TableRow key={index}>
+                <TableCell>{customer.firstName}</TableCell>
+                <TableCell>{customer.lastName}</TableCell>
+                <TableCell>{customer.phoneNumber}</TableCell>
+                <TableCell>{customer.telegramUsername}</TableCell>
+                <TableCell>{customer.address}</TableCell>
+                <TableCell>{customer.isVFClient ? "Yes" : "No"}</TableCell>
+                <TableCell>
+                  <Checkbox
+                    checked={customer.contacted}
+                    onChange={() => handleCheckboxChange(index)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+};
+
+export default CustomersPage;
+
+File: \pages\EditUserPage.tsx
+// src/pages/EditUserPage.tsx
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { Box, TextField, Button, Typography } from "@mui/material";
+
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  role: string;
+  username: string;
+  password: string;
+}
+
+const EditUserPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [formData, setFormData] = useState<User>({
+    id: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    role: "",
+    username: "",
+    password: "",
+  });
+
+  useEffect(() => {
+    fetch("/users.json")
+      .then((response) => response.json())
+      .then((data) => {
+        const userToEdit = data.find((user: User) => user.id === id);
+        if (userToEdit) {
+          setFormData(userToEdit);
+        }
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
+  }, [id]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Logic to update user in your data source
+    console.log("User updated", formData);
+  };
+
+  return (
+    <Box
+      component="form"
+      sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 8 }}
+      onSubmit={handleSubmit}
+    >
+      <Typography variant="h4">Edit User</Typography>
+      <TextField
+        label="First Name"
+        name="firstName"
+        value={formData.firstName}
+        onChange={handleChange}
+        required
+      />
+      <TextField
+        label="Last Name"
+        name="lastName"
+        value={formData.lastName}
+        onChange={handleChange}
+        required
+      />
+      <TextField
+        label="Phone Number"
+        name="phone"
+        type="number"
+        value={formData.phone}
+        onChange={handleChange}
+        required
+      />
+      <TextField
+        label="Role"
+        name="role"
+        value={formData.role}
+        onChange={handleChange}
+        required
+      />
+      <TextField
+        label="Username"
+        name="username"
+        value={formData.username}
+        onChange={handleChange}
+        required
+      />
+      <TextField
+        label="Password"
+        name="password"
+        type="password"
+        value={formData.password}
+        onChange={handleChange}
+        required
+      />
+      <Button type="submit" variant="contained">
+        Update User
+      </Button>
+    </Box>
+  );
+};
+
+export default EditUserPage;
+
+File: \pages\ListUsersPage.tsx
+// src/pages/ListUsersPage.tsx
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Button,
+  Box,
+} from "@mui/material";
+
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  role: string;
+  username: string;
+  password: string;
+}
+
+const ListUsersPage: React.FC = () => {
+  const [usersData, setUsersData] = useState<User[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch("/users.json")
+      .then((response) => response.json())
+      .then((data) => setUsersData(data))
+      .catch((error) => console.error("Error fetching users data:", error));
+  }, []);
+
+  const handleEdit = (id: string) => {
+    navigate(`/admin/edit-user/${id}`);
+  };
+
+  return (
+    <Box>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>First Name</TableCell>
+            <TableCell>Last Name</TableCell>
+            <TableCell>Phone</TableCell>
+            <TableCell>Role</TableCell>
+            <TableCell>Username</TableCell>
+            <TableCell>Edit</TableCell>
+            <TableCell>Delete</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {usersData.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell>{user.firstName}</TableCell>
+              <TableCell>{user.lastName}</TableCell>
+              <TableCell>{user.phone}</TableCell>
+              <TableCell>{user.role}</TableCell>
+              <TableCell>{user.username}</TableCell>
+              <TableCell>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleEdit(user.id)}
+                >
+                  Edit
+                </Button>
+              </TableCell>
+              <TableCell>
+                <Button variant="contained" color="secondary">
+                  Delete
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Box>
+  );
+};
+
+export default ListUsersPage;
+
+File: \pages\LoginPage.tsx
+// src/pages/LoginPage.tsx
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { TextField, Button, Container, Typography } from "@mui/material";
+import { loginUser } from "../services/api";
+import { setUser } from "../store/userSlice";
+
+const LoginPage: React.FC = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await loginUser(username, password);
+      dispatch(setUser(response.user));
+
+      if (response.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/user");
+      }
+    } catch (err) {
+      setError("Invalid credentials");
+    }
+  };
+
+  return (
+    <Container maxWidth="sm">
+      <Typography variant="h4" align="center" gutterBottom>
+        Login
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Username"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <TextField
+          label="Password"
+          type="password"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Login
+        </Button>
+        {error && <Typography color="error">{error}</Typography>}
+      </form>
+    </Container>
+  );
+};
+
+export default LoginPage;
+
+File: \pages\SettingsPage.tsx
+// src/pages/SettingsPage.tsx
+import React, { useState } from "react";
+import { TextField, Button, Box, Typography } from "@mui/material";
+import { hashPassword } from "../utils/hashPassword";
+
+const SettingsPage: React.FC = () => {
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  const handleChangePassword = async () => {
+    if (newPassword !== confirmNewPassword) {
+      alert("New passwords do not match");
+      return;
+    }
+
+    // Simulate verifying the current password
+    // Replace this with your actual verification logic
+    const isValidCurrentPassword = currentPassword === "adminpass"; // Replace with real check
+
+    if (!isValidCurrentPassword) {
+      alert("Current password is incorrect");
+      return;
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+    console.log("consoleData_ hashed password", hashedPassword);
+    console.log("Hashed Password:", hashedPassword);
+
+    // Here you would typically send the hashed password to your server to update the user's password
+    alert("Password updated successfully");
+  };
+
+  return (
+    <Box sx={{ p: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Change Password
+      </Typography>
+      <TextField
+        label="Current Password"
+        type="password"
+        value={currentPassword}
+        onChange={(e) => setCurrentPassword(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="New Password"
+        type="password"
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Confirm New Password"
+        type="password"
+        value={confirmNewPassword}
+        onChange={(e) => setConfirmNewPassword(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleChangePassword}
+        sx={{ mt: 2 }}
+      >
+        Apply
+      </Button>
+    </Box>
+  );
+};
+
+export default SettingsPage;
+
+File: \pages\UserHomepage.tsx
+// src/pages/UserHomepage.tsx
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+} from "@mui/material";
+
+interface Customer {
+  id: number;
+  name: string;
+  phone: string;
+  telegram: string;
+  address: string;
+}
+
+const UserHomepage: React.FC = () => {
+  const [customers, setCustomers] = useState<Customer[]>([]);
+
+  useEffect(() => {
+    // Fetch customer data from the JSON file or API
+    fetch("/customers.json")
+      .then((response) => response.json())
+      .then((data) => setCustomers(data))
+      .catch((error) => console.error("Error fetching customer data:", error));
+  }, []);
+
+  const handleEdit = (id: number) => {
+    // Logic to edit customer
+    console.log(`Edit customer with id ${id}`);
+  };
+
+  const handleDelete = (id: number) => {
+    // Logic to delete customer
+    console.log(`Delete customer with id ${id}`);
+  };
+
+  return (
+    <Box>
+      <Typography variant="h4" gutterBottom>
+        List Customers
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Phone</TableCell>
+              <TableCell>Telegram</TableCell>
+              <TableCell>Address</TableCell>
+              <TableCell>Edit</TableCell>
+              <TableCell>Delete</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {customers.map((customer) => (
+              <TableRow key={customer.id}>
+                <TableCell>{customer.name}</TableCell>
+                <TableCell>{customer.phone}</TableCell>
+                <TableCell>{customer.telegram}</TableCell>
+                <TableCell>{customer.address}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleEdit(customer.id)}
+                  >
+                    Edit
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleDelete(customer.id)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+};
+
+export default UserHomepage;
+
+File: \services\api.ts
+import axios from "axios";
+
+export const loginUser = async (username: string, password: string) => {
+  const response = await axios.post("http://localhost:5000/api/auth/login", {
+    username,
+    password,
+  });
+  console.log("response", response);
+  return response.data;
+};
+
+export const fetchUsers = async () => {
+  const response = await axios.get("/api/users");
+  return response.data;
+};
+
+File: \store\index.ts
+// src/store/index.ts
+import { configureStore } from "@reduxjs/toolkit";
+import userReducer from "./userSlice";
+
+const store = configureStore({
+  reducer: {
+    user: userReducer,
+  },
+});
+
+export default store;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+File: \store\userSlice.ts
+// src/store/userSlice.ts
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface UserState {
+  userID: number;
+  username: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  email: string;
+  phoneNumber: string;
+}
+
+const initialState: UserState = {
+  userID: 0,
+  username: "",
+  firstName: "",
+  lastName: "",
+  role: "",
+  email: "",
+  phoneNumber: "",
+};
+
+const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    setUser: (state, action: PayloadAction<UserState>) => {
+      return action.payload;
+    },
+    clearUser: () => initialState,
+  },
+});
+
+export const { setUser, clearUser } = userSlice.actions;
+export default userSlice.reducer;
+
+File: \utils\hashPassword.ts
+import bcrypt from "bcryptjs";
+
+export const hashPassword = async (password: string): Promise<string> => {
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  return hashedPassword;
+};
