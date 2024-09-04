@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
 import { useSelector } from "react-redux";
-import { RootState } from "../store"; // Adjust the path as needed
+import { RootState } from "../redux"; // Adjust the path as needed
 
 interface LayoutProps {
   links: { to: string; text: string }[];

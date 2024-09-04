@@ -1,4 +1,4 @@
-// src/store/userSlice.ts
+// src/redux/slices/userSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserState {
@@ -9,6 +9,7 @@ interface UserState {
   role: string;
   email: string;
   phoneNumber: string;
+  token: string; // Add the token here
 }
 
 const initialState: UserState = {
@@ -19,6 +20,7 @@ const initialState: UserState = {
   role: "",
   email: "",
   phoneNumber: "",
+  token: "", // Initialize the token as an empty string
 };
 
 const userSlice = createSlice({

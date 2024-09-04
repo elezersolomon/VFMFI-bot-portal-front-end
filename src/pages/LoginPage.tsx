@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button, Container, Typography } from "@mui/material";
 import { loginUser } from "../services/api";
-import { setUser } from "../store/userSlice";
+import { setUser } from "../redux/userSlice";
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -16,10 +16,10 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await loginUser(username, password);
-      dispatch(setUser(response.user));
+      const response = await loginUser(dispatch, username, password);
+      // dispatch(setUser(response.user));
 
-      if (response.user.role === "admin") {
+      if (response === "admin") {
         navigate("/admin");
       } else {
         navigate("/user");
