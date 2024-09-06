@@ -1,6 +1,10 @@
-// src/pages/ListUsersPage.tsx
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux";
+import { fetchUsers } from "../services/api";
+import { User } from "../models/user";
 import { useNavigate } from "react-router-dom";
+
 import {
   Table,
   TableBody,
@@ -10,31 +14,58 @@ import {
   Button,
   Box,
 } from "@mui/material";
+import {
+  Container,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  CircularProgress,
+} from "@mui/material";
 
-interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  role: string;
-  username: string;
-  password: string;
-}
-
-const ListUsersPage: React.FC = () => {
-  const [usersData, setUsersData] = useState<User[]>([]);
+const ListUsers: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch("/users.json")
-      .then((response) => response.json())
-      .then((data) => setUsersData(data))
-      .catch((error) => console.error("Error fetching users data:", error));
-  }, []);
+  const token = useSelector((state: RootState) => state.user.token); // Get token from Redux state
 
-  const handleEdit = (id: string) => {
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        if (token) {
+          const userData = await fetchUsers(token); // Pass token to fetchUsers
+          setUsers(userData);
+        }
+      } catch (error: any) {
+        setError("Failed to fetch users");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [token]);
+  const handleEdit = (id: any) => {
     navigate(`/admin/edit-user/${id}`);
   };
+  if (loading) {
+    return (
+      <Container>
+        <CircularProgress />
+        <Typography>Loading users...</Typography>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <Typography color="error">{error}</Typography>
+      </Container>
+    );
+  }
 
   return (
     <Box>
@@ -51,18 +82,18 @@ const ListUsersPage: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {usersData.map((user) => (
-            <TableRow key={user.id}>
+          {users.map((user) => (
+            <TableRow key={user.userID}>
               <TableCell>{user.firstName}</TableCell>
               <TableCell>{user.lastName}</TableCell>
-              <TableCell>{user.phone}</TableCell>
+              <TableCell>{user.phoneNumber}</TableCell>
               <TableCell>{user.role}</TableCell>
-              <TableCell>{user.username}</TableCell>
+              <TableCell>{user.userName}</TableCell>
               <TableCell>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => handleEdit(user.id)}
+                  onClick={() => handleEdit(user.userID)}
                 >
                   Edit
                 </Button>
@@ -80,4 +111,4 @@ const ListUsersPage: React.FC = () => {
   );
 };
 
-export default ListUsersPage;
+export default ListUsers;

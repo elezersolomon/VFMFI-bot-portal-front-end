@@ -1,7 +1,7 @@
 import axios from "axios";
 import { setUser } from "../redux/userSlice";
 import { AppDispatch } from "../redux";
-
+import { User } from "../models/user";
 export const loginUser = async (
   dispatch: AppDispatch,
   username: string,
@@ -31,13 +31,21 @@ export const loginUser = async (
   return role;
 };
 
-export const fetchUsers = async () => {
-  const response = await axios.get("/api/users");
-  return response.data;
+export const fetchUsers = async (token: string): Promise<User[]> => {
+  try {
+    const response = await axios.get<User[]>(
+      "http://localhost:5000/api/users",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the request headers
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to fetch users");
+  }
 };
-// src/services/api.ts
-
-// src/services/api.ts
 
 export const createUser = async (
   userData: {
