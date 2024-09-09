@@ -1,43 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux";
 import { fetchUsers } from "../services/api";
-import { User } from "../models/user";
+import { RootState } from "../redux";
 import { useNavigate } from "react-router-dom";
 
 import {
+  Box,
   Table,
-  TableBody,
-  TableCell,
   TableHead,
   TableRow,
+  TableCell,
+  TableBody,
   Button,
-  Box,
-} from "@mui/material";
-import {
-  Container,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
   CircularProgress,
+  Typography,
+  TextField,
 } from "@mui/material";
+import { useSelector } from "react-redux";
+
+interface User {
+  userID: number;
+  userName: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  email: string;
+  phoneNumber: string;
+}
 
 const ListUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState<string>(""); // Search state
+  const token = useSelector((state: RootState) => state.user.token);
 
-  const token = useSelector((state: RootState) => state.user.token); // Get token from Redux state
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        if (token) {
-          const userData = await fetchUsers(token); // Pass token to fetchUsers
-          setUsers(userData);
-        }
+        const userData = await fetchUsers(token);
+        setUsers(userData);
       } catch (error: any) {
         setError("Failed to fetch users");
       } finally {
@@ -47,28 +50,53 @@ const ListUsers: React.FC = () => {
 
     fetchUserData();
   }, [token]);
-  const handleEdit = (id: any) => {
-    navigate(`/admin/edit-user/${id}`);
+
+  const handleEdit = (userID: number) => {
+    const userToEdit = users.find((user) => user.userID === userID);
+    if (userToEdit) {
+      navigate(`/admin/edit-user/${userID}`, { state: { user: userToEdit } });
+    }
   };
+
+  // Filter users based on search query
+  const filteredUsers = users.filter(
+    (user) =>
+      user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.role.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (loading) {
     return (
-      <Container>
+      <Box>
         <CircularProgress />
         <Typography>Loading users...</Typography>
-      </Container>
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <Container>
+      <Box>
         <Typography color="error">{error}</Typography>
-      </Container>
+      </Box>
     );
   }
 
   return (
     <Box>
+      {/* Search field */}
+      <TextField
+        label="Search Users"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+
+      {/* User Table */}
       <Table>
         <TableHead>
           <TableRow>
@@ -82,7 +110,7 @@ const ListUsers: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((user) => (
+          {filteredUsers.map((user) => (
             <TableRow key={user.userID}>
               <TableCell>{user.firstName}</TableCell>
               <TableCell>{user.lastName}</TableCell>

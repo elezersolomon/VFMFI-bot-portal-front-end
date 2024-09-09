@@ -2,6 +2,7 @@ import axios from "axios";
 import { setUser } from "../redux/userSlice";
 import { AppDispatch } from "../redux";
 import { User } from "../models/user";
+
 export const loginUser = async (
   dispatch: AppDispatch,
   username: string,
@@ -70,4 +71,31 @@ export const createUser = async (
   );
 
   return response.data;
+};
+
+// New function to update user data
+export const updateUser = async (
+  userData: {
+    userName: string;
+    email: string;
+    phoneNumber: string;
+    role: string;
+    userID: number;
+  },
+  token: string
+) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:5000/api/users/`,
+      userData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to update user");
+  }
 };
