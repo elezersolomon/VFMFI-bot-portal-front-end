@@ -1,7 +1,7 @@
 import axios from "axios";
 import { setUser } from "../redux/userSlice";
 import { AppDispatch } from "../redux";
-import { User } from "../models/user";
+import { User, Customer } from "../models/user";
 
 export const loginUser = async (
   dispatch: AppDispatch,
@@ -98,4 +98,28 @@ export const updateUser = async (
   } catch (error) {
     throw new Error("Failed to update user");
   }
+};
+// Replace with your backend URL
+
+// Fetch all customers
+export const fetchCustomers = async (token: string) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/api/Customers`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error fetching customers");
+  }
+};
+
+export const updateCustomer = async (customer: Customer, token: string) => {
+  const response = await axios.put("/api/customers", customer, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
 };
