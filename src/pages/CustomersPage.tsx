@@ -89,11 +89,11 @@ const ListCustomers: React.FC = () => {
     const customerToUpdate = customers.find(
       (customer) => customer.userID === customerID
     );
-    console.log("console_data: customer", customerToUpdate);
     if (customerToUpdate) {
       try {
         // Create a new customer object with the updated status
         const updatedCustomer = { ...customerToUpdate, status: newStatus };
+        console.log("console_data: customer", updatedCustomer);
 
         // Use updateCustomer API to update the customer
         await updateCustomer(updatedCustomer, token); // Pass the updated customer object

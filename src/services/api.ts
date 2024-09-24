@@ -116,10 +116,14 @@ export const fetchCustomers = async (token: string) => {
 };
 
 export const updateCustomer = async (customer: Customer, token: string) => {
-  const response = await axios.put("/api/customers", customer, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await axios.put(
+    "http://localhost:5000/api/customers",
+    customer,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };
