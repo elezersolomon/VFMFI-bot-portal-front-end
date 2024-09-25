@@ -37,7 +37,6 @@ const ListCustomers: React.FC = () => {
       try {
         const customerData = await fetchCustomers(token);
         setCustomers(customerData);
-        console.log("consoleData_customerData", customerData);
         setFilteredCustomers(customerData);
         // Set the filtered customers initially to all customers
       } catch (error: any) {
@@ -93,7 +92,6 @@ const ListCustomers: React.FC = () => {
       try {
         // Create a new customer object with the updated status
         const updatedCustomer = { ...customerToUpdate, status: newStatus };
-        console.log("console_data: customer", updatedCustomer);
 
         // Use updateCustomer API to update the customer
         await updateCustomer(updatedCustomer, token); // Pass the updated customer object

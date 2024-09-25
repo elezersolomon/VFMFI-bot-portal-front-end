@@ -8,6 +8,8 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import { updateUser } from "../services/api";
 import { RootState } from "../redux";
@@ -65,9 +67,24 @@ const EditUser: React.FC = () => {
 
     try {
       await updateUser(formData, token);
+
+      // Set success message and show modal
       setMessage("User updated successfully!");
       setMessageType("success");
       setModalOpen(true);
+
+      // Reset the form to blank values after submission
+      setFormData({
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        role: "",
+        email: "",
+        userName: "",
+        userID: "",
+        password: "",
+        status: "", // Or default status value
+      });
     } catch (error) {
       setMessage("Failed to update user. Please try again.");
       setMessageType("error");
@@ -132,14 +149,19 @@ const EditUser: React.FC = () => {
         value={formData.password}
         onChange={handleTextFieldChange}
       />
-      <Select
-        name="status"
-        value={formData.status}
-        onChange={handleSelectChange}
-      >
-        <MenuItem value="Active">Active</MenuItem>
-        <MenuItem value="Disabled">Disabled</MenuItem>
-      </Select>
+      <FormControl fullWidth>
+        <InputLabel id="status-label">Status</InputLabel>
+        <Select
+          labelId="status-label"
+          label="Status"
+          name="status"
+          value={formData.status}
+          onChange={handleSelectChange}
+        >
+          <MenuItem value="Active">Active</MenuItem>
+          <MenuItem value="Disabled">Disabled</MenuItem>
+        </Select>
+      </FormControl>
       <Button type="submit" variant="contained" color="primary">
         Save
       </Button>
