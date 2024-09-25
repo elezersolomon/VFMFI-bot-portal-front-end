@@ -6,6 +6,7 @@ export interface User {
   role: string;
   email: string;
   phoneNumber: string;
+  status: string;
 }
 
 export interface Customer {

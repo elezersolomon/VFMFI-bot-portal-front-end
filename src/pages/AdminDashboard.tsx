@@ -19,7 +19,6 @@ import {
   Legend,
 } from "recharts";
 import axios from "axios";
-
 // Define types
 interface UserData {
   role: string;
@@ -44,8 +43,8 @@ const AdminDashboard: React.FC = () => {
     const fetchData = async () => {
       try {
         const [usersResponse, customersResponse] = await Promise.all([
-          axios.get("/api/users/stats"), // API endpoint for users data
-          axios.get("/api/customers/stats"), // API endpoint for customers data
+          axios.get("http://localhost:5000/api/users/stats"), // API endpoint for users data
+          axios.get("http://localhost:5000/api/customers/stats"), // API endpoint for customers data
         ]);
         setUserData(usersResponse.data);
         setCustomerData(customersResponse.data);

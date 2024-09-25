@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { fetchUsers } from "../services/api";
 import { RootState } from "../redux";
 import { useNavigate } from "react-router-dom";
-
 import {
   Box,
   Table,
@@ -14,24 +13,18 @@ import {
   CircularProgress,
   Typography,
   TextField,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 
-interface User {
-  userID: number;
-  userName: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  email: string;
-  phoneNumber: string;
-}
+import { User } from "../models/user";
 
 const ListUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const [searchQuery, setSearchQuery] = useState<string>(""); // Search state
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const token = useSelector((state: RootState) => state.user.token);
 
   const navigate = useNavigate();
@@ -58,7 +51,13 @@ const ListUsers: React.FC = () => {
     }
   };
 
-  // Filter users based on search query
+  const handleStatusChange = (userID: number, newStatus: string) => {
+    const updatedUsers = users.map((user) =>
+      user.userID === userID ? { ...user, status: newStatus } : user
+    );
+    setUsers(updatedUsers);
+  };
+
   const filteredUsers = users.filter(
     (user) =>
       user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -86,7 +85,6 @@ const ListUsers: React.FC = () => {
 
   return (
     <Box>
-      {/* Search field */}
       <TextField
         label="Search Users"
         variant="outlined"
@@ -96,7 +94,6 @@ const ListUsers: React.FC = () => {
         onChange={(e) => setSearchQuery(e.target.value)}
       />
 
-      {/* User Table */}
       <Table>
         <TableHead>
           <TableRow>
@@ -105,6 +102,7 @@ const ListUsers: React.FC = () => {
             <TableCell>Phone</TableCell>
             <TableCell>Role</TableCell>
             <TableCell>Username</TableCell>
+            <TableCell>Status</TableCell> {/* New Status Column */}
             <TableCell>Edit</TableCell>
             <TableCell>Delete</TableCell>
           </TableRow>
@@ -117,6 +115,17 @@ const ListUsers: React.FC = () => {
               <TableCell>{user.phoneNumber}</TableCell>
               <TableCell>{user.role}</TableCell>
               <TableCell>{user.userName}</TableCell>
+              <TableCell>
+                <Select
+                  value={user.status}
+                  onChange={(e) =>
+                    handleStatusChange(user.userID, e.target.value)
+                  }
+                >
+                  <MenuItem value="Active">Active</MenuItem>
+                  <MenuItem value="Disabled">Disabled</MenuItem>
+                </Select>
+              </TableCell>
               <TableCell>
                 <Button
                   variant="contained"

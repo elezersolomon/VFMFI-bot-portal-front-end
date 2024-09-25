@@ -81,6 +81,7 @@ export const updateUser = async (
     phoneNumber: string;
     role: string;
     userID: number;
+    status: string;
   },
   token: string
 ) => {

@@ -1,17 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Typography, TextField, Button } from "@mui/material";
-import { updateUser } from "../services/api"; // Import the updateUser API function
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+} from "@mui/material";
+import { updateUser } from "../services/api";
 import { RootState } from "../redux";
 import { useSelector } from "react-redux";
-import NotificationModal from "../components/NotificationModal"; // Notification modal for messages
+import NotificationModal from "../components/NotificationModal";
 
 const EditUser: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const token = useSelector((state: RootState) => state.user.token); // Get token from Redux state
-
-  const user = location.state?.user; // Get user data passed from ListUsers page
+  const token = useSelector((state: RootState) => state.user.token);
+  const user = location.state?.user;
 
   const initialFormData = {
     firstName: user?.firstName || "",
@@ -21,7 +28,8 @@ const EditUser: React.FC = () => {
     email: user?.email || "",
     userName: user?.userName || "",
     userID: user?.userID || "",
-    password: "", // Leave password empty to allow it to be updated if needed
+    password: "",
+    status: user?.status || "Active", // New status field
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -31,39 +39,32 @@ const EditUser: React.FC = () => {
   );
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
-  // Function to handle form input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle changes for TextField inputs
+  const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
 
-    // Clear message when inputs are edited
     if (message) {
       setMessage(null);
       setMessageType("info");
     }
   };
 
-  // Function to check if any value has changed from the initial state
-  const hasFormChanged = () => {
-    return JSON.stringify(formData) !== JSON.stringify(initialFormData);
+  // Handle changes for the Select input
+  const handleSelectChange = (e: SelectChangeEvent) => {
+    setFormData({
+      ...formData,
+      [e.target.name as string]: e.target.value,
+    });
   };
 
-  // Function to handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check if any form value has changed
-    if (!hasFormChanged()) {
-      setMessage("Please make changes before submitting.");
-      setMessageType("info");
-      setModalOpen(true);
-      return;
-    }
-
     try {
-      await updateUser(formData, token); // Send the update request to the API
+      await updateUser(formData, token);
       setMessage("User updated successfully!");
       setMessageType("success");
       setModalOpen(true);
@@ -85,14 +86,14 @@ const EditUser: React.FC = () => {
         label="First Name"
         name="firstName"
         value={formData.firstName}
-        onChange={handleChange}
+        onChange={handleTextFieldChange}
         required
       />
       <TextField
         label="Last Name"
         name="lastName"
         value={formData.lastName}
-        onChange={handleChange}
+        onChange={handleTextFieldChange}
         required
       />
       <TextField
@@ -100,28 +101,28 @@ const EditUser: React.FC = () => {
         name="phoneNumber"
         type="number"
         value={formData.phoneNumber}
-        onChange={handleChange}
+        onChange={handleTextFieldChange}
         required
       />
       <TextField
         label="Email"
         name="email"
         value={formData.email}
-        onChange={handleChange}
+        onChange={handleTextFieldChange}
         required
       />
       <TextField
         label="Role"
         name="role"
         value={formData.role}
-        onChange={handleChange}
+        onChange={handleTextFieldChange}
         required
       />
       <TextField
         label="Username"
         name="userName"
         value={formData.userName}
-        onChange={handleChange}
+        onChange={handleTextFieldChange}
         required
       />
       <TextField
@@ -129,22 +130,25 @@ const EditUser: React.FC = () => {
         name="password"
         type="password"
         value={formData.password}
-        onChange={handleChange}
+        onChange={handleTextFieldChange}
       />
-      <Button type="submit" variant="contained">
-        Update User
+      <Select
+        name="status"
+        value={formData.status}
+        onChange={handleSelectChange}
+      >
+        <MenuItem value="Active">Active</MenuItem>
+        <MenuItem value="Disabled">Disabled</MenuItem>
+      </Select>
+      <Button type="submit" variant="contained" color="primary">
+        Save
       </Button>
 
-      {/* Notification Modal */}
       <NotificationModal
-        message={message || ""}
-        messageType={messageType}
-        onClose={() => {
-          setMessage(null);
-          setMessageType("info");
-          setModalOpen(false);
-        }}
         isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        message={message!}
+        messageType={messageType}
       />
     </Box>
   );
