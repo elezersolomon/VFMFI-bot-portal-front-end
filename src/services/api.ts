@@ -12,10 +12,9 @@ export const loginUser = async (
     username,
     password,
   });
-  const { id, firstName, lastName, role, email, phoneNumber } =
+  const { id, firstName, lastName, role, email, phoneNumber, status } =
     response.data.user;
   const token = response.data.token;
-
   dispatch(
     setUser({
       userID: id,
@@ -26,10 +25,11 @@ export const loginUser = async (
       email,
       phoneNumber,
       token,
+      status,
     })
   );
 
-  return role;
+  return { role: role, status: status };
 };
 
 export const fetchUsers = async (token: string): Promise<User[]> => {
@@ -42,6 +42,7 @@ export const fetchUsers = async (token: string): Promise<User[]> => {
         },
       }
     );
+
     return response.data;
   } catch (error) {
     throw new Error("Failed to fetch users");

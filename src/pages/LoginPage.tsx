@@ -1,4 +1,3 @@
-// src/pages/LoginPage.tsx
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -17,9 +16,18 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     try {
       const response = await loginUser(dispatch, username, password);
-      // dispatch(setUser(response.user));
 
-      if (response === "admin") {
+      // Check if the user is disabled
+      if (response.status === "Disabled") {
+        setError(
+          "Your account is disabled. Please contact website administrator."
+        );
+        return;
+      }
+
+      // If user is enabled, proceed with the login
+
+      if (response.role === "admin") {
         navigate("/admin");
       } else {
         navigate("/user");

@@ -9,6 +9,7 @@ interface UserState {
   role: string;
   email: string;
   phoneNumber: string;
+  status: string;
   token: string; // Add the token here
 }
 
@@ -20,6 +21,7 @@ const initialState: UserState = {
   role: "",
   email: "",
   phoneNumber: "",
+  status: "",
   token: "", // Initialize the token as an empty string
 };
 
