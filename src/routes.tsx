@@ -9,6 +9,7 @@ import ListUsersPage from "./pages/ListUsersPage";
 import EditUserPage from "./pages/EditUserPage";
 import SettingsPage from "./pages/SettingsPage";
 import LoginPage from "./pages/LoginPage";
+import AddCustomerPage from "./pages/AddCustomersPage";
 import CustomersPage from "./pages/CustomersPage";
 
 const AppRoutes: React.FC = () => (
@@ -45,6 +46,8 @@ const AppRoutes: React.FC = () => (
           />
         }
       >
+        <Route path="add-customer" element={<AddCustomerPage />} />
+
         <Route path="customers" element={<CustomersPage />} />
         <Route path="settings" element={<SettingsPage />} />
       </Route>

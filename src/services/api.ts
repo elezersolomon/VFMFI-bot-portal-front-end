@@ -129,3 +129,28 @@ export const updateCustomer = async (customer: Customer, token: string) => {
   );
   return response.data;
 };
+
+export const createCustomer = async (
+  customerData: {
+    telegramUserName: string;
+    firstName: string;
+    lastName: string;
+    isCustomer: boolean;
+    telegramID: string;
+    phoneNumber: string;
+    address: string;
+  },
+  token: string
+) => {
+  const response = await axios.post(
+    "http://localhost:5000/api/customers/",
+    customerData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};

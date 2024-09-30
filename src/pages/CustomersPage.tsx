@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchCustomers, updateCustomer } from "../services/api"; // Import fetchCustomers and updateCustomerStatus
+import { fetchCustomers, updateCustomer } from "../services/api";
 import { RootState } from "../redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -17,9 +17,8 @@ import {
   MenuItem,
   FormControl,
 } from "@mui/material";
-import { SelectChangeEvent } from "@mui/material"; // Import SelectChangeEvent
+import { SelectChangeEvent } from "@mui/material";
 import { useSelector } from "react-redux";
-
 import { Customer } from "../models/user";
 
 const ListCustomers: React.FC = () => {
@@ -37,8 +36,7 @@ const ListCustomers: React.FC = () => {
       try {
         const customerData = await fetchCustomers(token);
         setCustomers(customerData);
-        setFilteredCustomers(customerData);
-        // Set the filtered customers initially to all customers
+        setFilteredCustomers(customerData); // Set the filtered customers initially to all customers
       } catch (error: any) {
         setError("Failed to fetch customers");
       } finally {
@@ -110,6 +108,11 @@ const ListCustomers: React.FC = () => {
     }
   };
 
+  // Handle button click to add a new customer
+  const handleAddCustomer = () => {
+    navigate("/user/add-customer");
+  };
+
   if (loading) {
     return (
       <Box>
@@ -132,6 +135,14 @@ const ListCustomers: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Customer List
       </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleAddCustomer}
+        style={{ marginBottom: "16px" }} // Add some spacing
+      >
+        Add New Customer
+      </Button>
       <TextField
         label="Search Customers"
         variant="outlined"
