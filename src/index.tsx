@@ -6,12 +6,16 @@ import { ThemeProvider } from "@mui/material/styles";
 import AppRoutes from "./routes";
 import store from "./redux";
 import theme from "./theme";
+import { PersistGate } from "redux-persist/integration/react";
+import { storeConf, persistor } from "./redux/store";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <AppRoutes />
+        <PersistGate loading={null} persistor={persistor}>
+          <AppRoutes />
+        </PersistGate>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>,
