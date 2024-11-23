@@ -13,8 +13,6 @@ import {
   CircularProgress,
   Typography,
   TextField,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 
@@ -49,13 +47,6 @@ const ListUsers: React.FC = () => {
     if (userToEdit) {
       navigate(`/admin/edit-user/${userID}`, { state: { user: userToEdit } });
     }
-  };
-
-  const handleStatusChange = (userID: number, newStatus: string) => {
-    const updatedUsers = users.map((user) =>
-      user.userID === userID ? { ...user, status: newStatus } : user
-    );
-    setUsers(updatedUsers);
   };
 
   const filteredUsers = users.filter(
@@ -102,7 +93,7 @@ const ListUsers: React.FC = () => {
             <TableCell>Phone</TableCell>
             <TableCell>Role</TableCell>
             <TableCell>Username</TableCell>
-            <TableCell>Status</TableCell> {/* New Status Column */}
+            <TableCell>Status</TableCell>
             <TableCell>Edit</TableCell>
             <TableCell>Delete</TableCell>
           </TableRow>
@@ -115,17 +106,7 @@ const ListUsers: React.FC = () => {
               <TableCell>{user.phoneNumber}</TableCell>
               <TableCell>{user.role}</TableCell>
               <TableCell>{user.userName}</TableCell>
-              <TableCell>
-                <Select
-                  value={user.status}
-                  onChange={(e) =>
-                    handleStatusChange(user.userID, e.target.value)
-                  }
-                >
-                  <MenuItem value="Active">Active</MenuItem>
-                  <MenuItem value="Disabled">Disabled</MenuItem>
-                </Select>
-              </TableCell>
+              <TableCell>{user.status}</TableCell>
               <TableCell>
                 <Button
                   variant="contained"

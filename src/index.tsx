@@ -7,7 +7,7 @@ import AppRoutes from "./routes";
 import store from "./redux";
 import theme from "./theme";
 import { PersistGate } from "redux-persist/integration/react";
-import { storeConf, persistor } from "./redux/store";
+import { persistor } from "./redux/index";
 
 ReactDOM.render(
   <React.StrictMode>
