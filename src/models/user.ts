@@ -18,5 +18,5 @@ export interface Customer {
   telegramUserName: string;
   status: string; // Changing the status here
   dateRegistered: string;
-  adress: String;
+  address: String;
 }

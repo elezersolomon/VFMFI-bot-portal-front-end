@@ -54,6 +54,7 @@ const ListCustomers: React.FC = () => {
         customer.userFName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         customer.userLName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         customer.phoneNumber.includes(searchTerm) ||
+        customer.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
         customer.telegramUserName
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
@@ -154,13 +155,14 @@ const ListCustomers: React.FC = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>First Name</TableCell>
-            <TableCell>Last Name</TableCell>
-            <TableCell>Phone</TableCell>
-            <TableCell>Telegram Username</TableCell>
-            <TableCell>Date Registered</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Edit</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>First Name</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Last Name</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Phone</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Address</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Telegram Username</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Date Registered</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Status</TableCell>
+            {/* <TableCell>Edit</TableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -170,6 +172,7 @@ const ListCustomers: React.FC = () => {
                 <TableCell>{customer.userFName}</TableCell>
                 <TableCell>{customer.userLName}</TableCell>
                 <TableCell>{customer.phoneNumber}</TableCell>
+                <TableCell>{customer.address}</TableCell>
                 <TableCell>{customer.telegramUserName}</TableCell>
                 <TableCell>
                   {new Date(customer.dateRegistered).toLocaleDateString()}
@@ -189,7 +192,7 @@ const ListCustomers: React.FC = () => {
                     </Select>
                   </FormControl>
                 </TableCell>
-                <TableCell>
+                {/* <TableCell>
                   <Button
                     variant="contained"
                     color="primary"
@@ -197,7 +200,7 @@ const ListCustomers: React.FC = () => {
                   >
                     Edit
                   </Button>
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             ))
           ) : (

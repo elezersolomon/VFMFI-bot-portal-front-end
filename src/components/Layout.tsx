@@ -121,7 +121,6 @@ const Layout: React.FC<LayoutProps> = ({ links, role }) => {
           bgcolor: "background.default",
           p: 3,
           mt: "64px",
-          ml: "240px",
         }}
       >
         <Container
