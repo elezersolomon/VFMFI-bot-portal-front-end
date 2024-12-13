@@ -101,9 +101,31 @@ export const updateUser = async (
     throw new Error("Failed to update user");
   }
 };
-// Replace with your backend URL
+export const resetUserPassword = async (
+  data: {
+    username: string;
+    firstName: string;
+    userID: string;
+    phoneNumber: string;
+  },
+  token: string
+) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:5000/api/users/resetUserPassword`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to update user");
+  }
+};
 
-// Fetch all customers
 export const fetchCustomers = async (token: string) => {
   try {
     const response = await axios.get(`http://localhost:5000/api/Customers`, {

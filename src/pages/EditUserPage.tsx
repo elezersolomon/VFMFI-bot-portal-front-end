@@ -11,11 +11,10 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
-import { updateUser } from "../services/api";
+import { resetUserPassword, updateUser } from "../services/api";
 import { RootState } from "../redux";
 import { useSelector } from "react-redux";
 import NotificationModal from "../components/NotificationModal";
-
 const EditUser: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -92,6 +91,22 @@ const EditUser: React.FC = () => {
     }
   };
 
+  function resetPassword(e: React.MouseEvent) {
+    resetUserPassword(
+      {
+        username: formData.userName,
+        userID: formData.userID,
+        firstName: formData.firstName,
+        phoneNumber: formData.phoneNumber,
+      },
+      token
+    ).catch((error) => {
+      setMessage("Failed to reset user password. Please try again.");
+      setMessageType("error");
+      setModalOpen(true);
+    });
+  }
+
   return (
     <Box
       component="form"
@@ -142,13 +157,6 @@ const EditUser: React.FC = () => {
         onChange={handleTextFieldChange}
         required
       />
-      <TextField
-        label="Password"
-        name="password"
-        type="password"
-        value={formData.password}
-        onChange={handleTextFieldChange}
-      />
       <FormControl fullWidth>
         <InputLabel id="status-label">Status</InputLabel>
         <Select
@@ -162,9 +170,19 @@ const EditUser: React.FC = () => {
           <MenuItem value="Disabled">Disabled</MenuItem>
         </Select>
       </FormControl>
-      <Button type="submit" variant="contained" color="primary">
-        Save
-      </Button>
+
+      <Box
+        component="form"
+        sx={{ display: "flex", flexDirection: "row", gap: 2, mt: 8 }}
+        onSubmit={handleSubmit}
+      >
+        <Button type="submit" variant="contained" color="primary">
+          Save
+        </Button>
+        <Button onClick={resetPassword} variant="contained" color="primary">
+          Reset password
+        </Button>
+      </Box>
 
       <NotificationModal
         isOpen={isModalOpen}
