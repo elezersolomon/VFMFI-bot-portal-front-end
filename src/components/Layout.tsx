@@ -18,6 +18,8 @@ import {
 import { AccountCircle } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux"; // Adjust the path as needed
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice";
 
 interface LayoutProps {
   links: { to: string; text: string }[];
@@ -25,6 +27,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ links, role }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const userFirstName = useSelector((state: RootState) => state.user.username);
@@ -38,6 +41,19 @@ const Layout: React.FC<LayoutProps> = ({ links, role }) => {
 
   const handleLogout = () => {
     navigate("/");
+    dispatch(
+      setUser({
+        userID: 0,
+        username: "",
+        firstName: "",
+        lastName: "",
+        role: "",
+        email: "",
+        phoneNumber: "",
+        token: "",
+        status: "",
+      })
+    );
   };
 
   const handleSettings = () => {

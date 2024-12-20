@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useSelector } from "react-redux";
 
-import { User } from "../models/user";
+import { User } from "../models";
 
 const ListUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);

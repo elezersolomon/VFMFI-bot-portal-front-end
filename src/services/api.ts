@@ -1,7 +1,7 @@
 import axios from "axios";
 import { setUser } from "../redux/userSlice";
 import { AppDispatch } from "../redux";
-import { User, Customer } from "../models/user";
+import { User, Customer, Feedback } from "../models";
 
 export const loginUser = async (
   dispatch: AppDispatch,
@@ -175,4 +175,20 @@ export const createCustomer = async (
   );
 
   return response.data;
+};
+
+export const fetchFeedbacks = async (token: string): Promise<Feedback[]> => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5000/api/data/getFeedbacks",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the request headers
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to fetch users");
+  }
 };

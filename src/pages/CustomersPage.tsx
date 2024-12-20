@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
 import { useSelector } from "react-redux";
-import { Customer } from "../models/user";
+import { Customer } from "../models";
 
 const ListCustomers: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);

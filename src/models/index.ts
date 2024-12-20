@@ -20,3 +20,12 @@ export interface Customer {
   dateRegistered: string;
   address: String;
 }
+
+export interface Feedback {
+  commentID: string;
+  dateCreated: string;
+  feedback: string;
+  leadID: string;
+  telegramUserName: string;
+  userID: string;
+}
