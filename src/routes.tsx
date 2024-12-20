@@ -1,49 +1,71 @@
-// src/routes.tsx
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import AdminPanel from "./components/AdminPanel";
+import Dashboard from "./pages/Dashboard"; // Import the dashboard page
 import CreateUserPage from "./pages/CreateUserPage";
 import ListUsersPage from "./pages/ListUsersPage";
-import UserHomepage from "./pages/UserHomepage";
-import CustomersPage from "./pages/CustomersPage";
-import SettingsPage from "./pages/SettingsPage";
 import EditUserPage from "./pages/EditUserPage";
+import SettingsPage from "./pages/SettingsPage";
 import LoginPage from "./pages/LoginPage";
+import AddCustomerPage from "./pages/AddCustomersPage";
+import CustomersPage from "./pages/CustomersPage";
+import FeedbacksPage from "./pages/feedbacksPage";
+import PrivateRoute from "./components/PrivateRoute";
 
 const AppRoutes: React.FC = () => (
   <BrowserRouter>
     <Routes>
+      {/* Public Route */}
       <Route path="/" element={<LoginPage />} />
+
+      {/* Private Routes for Admin */}
       <Route
         path="/admin"
         element={
-          <Layout
-            role="admin"
-            links={[
-              { to: "/admin/create-user", text: "Create User" },
-              { to: "/admin/list-users", text: "List Users" },
-            ]}
-          />
+          <PrivateRoute>
+            <Layout
+              role="admin"
+              links={[
+                { to: "/admin/dashboard", text: "Dashboard" }, // Add Dashboard link
+                { to: "/admin/create-user", text: "Create User" },
+                { to: "/admin/list-users", text: "List Users" },
+              ]}
+            />
+          </PrivateRoute>
         }
       >
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="create-user" element={<CreateUserPage />} />
         <Route path="list-users" element={<ListUsersPage />} />
         <Route path="edit-user/:id" element={<EditUserPage />} />
         <Route path="settings" element={<SettingsPage />} />
+        {/* Redirect to dashboard by default if no other child route is matched */}
+        <Route index element={<Navigate to="dashboard" />} />
       </Route>
+
+      {/* Private Routes for User */}
       <Route
         path="/user"
         element={
-          <Layout
-            role="user"
-            links={[{ to: "/user/customers", text: "Customers" }]}
-          />
+          <PrivateRoute>
+            <Layout
+              role="user"
+              links={[
+                { to: "/user/customers", text: "Customers" },
+                { to: "/user/feedbacks", text: "Feedbacks" },
+              ]}
+            />
+          </PrivateRoute>
         }
       >
         <Route path="customers" element={<CustomersPage />} />
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="feedbacks" element={<FeedbacksPage />} />
       </Route>
+
+      {/* Fallback Route */}
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   </BrowserRouter>
 );
