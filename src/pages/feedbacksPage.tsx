@@ -14,14 +14,22 @@ const FeedbackPage: React.FC = () => {
     const getFeedbacks = async () => {
       try {
         const response = await fetchFeedbacks(token); // Fetch feedbacks from the backend
-        setFeedbacks(response);
+
+        // Sort the feedbacks by dateCreated (latest first)
+        const sortedFeedbacks = response.sort(
+          (a: Feedback, b: Feedback) =>
+            new Date(b.dateCreated).getTime() -
+            new Date(a.dateCreated).getTime()
+        );
+
+        setFeedbacks(sortedFeedbacks);
       } catch (error) {
         console.error("Error fetching feedbacks:", error);
       }
     };
 
     getFeedbacks();
-  }, []);
+  }, [token]); // Add token as a dependency to avoid warnings
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -61,7 +69,7 @@ const FeedbackPage: React.FC = () => {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  alignItems: "flex-start", // Align content to the left
+                  alignItems: "flex-start",
                   position: "relative",
                 }}
               >
@@ -105,7 +113,6 @@ const FeedbackPage: React.FC = () => {
                   <Box
                     sx={{
                       padding: 0.5,
-                      // display: "flex",
                       maxWidth: "100%",
                       flexDirection: "column",
                     }}
@@ -113,9 +120,7 @@ const FeedbackPage: React.FC = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        // backgroundColor: "red",
                         width: "100%",
-                        // paddingLeft: "100px",
                         flexDirection: "row",
                         justifyContent: "flex-end",
                       }}
