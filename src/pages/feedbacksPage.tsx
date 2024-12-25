@@ -13,15 +13,13 @@ const FeedbackPage: React.FC = () => {
   useEffect(() => {
     const getFeedbacks = async () => {
       try {
-        const response = await fetchFeedbacks(token); // Fetch feedbacks from the backend
+        const response = await fetchFeedbacks(token);
 
-        // Sort the feedbacks by dateCreated (latest first)
         const sortedFeedbacks = response.sort(
           (a: Feedback, b: Feedback) =>
             new Date(b.dateCreated).getTime() -
             new Date(a.dateCreated).getTime()
         );
-
         setFeedbacks(sortedFeedbacks);
       } catch (error) {
         console.error("Error fetching feedbacks:", error);

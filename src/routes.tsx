@@ -12,6 +12,7 @@ import AddCustomerPage from "./pages/AddCustomersPage";
 import CustomersPage from "./pages/CustomersPage";
 import FeedbacksPage from "./pages/feedbacksPage";
 import PrivateRoute from "./components/PrivateRoute";
+import EditBotData from "./pages/EditBotDataPage";
 
 const AppRoutes: React.FC = () => (
   <BrowserRouter>
@@ -54,6 +55,7 @@ const AppRoutes: React.FC = () => (
               links={[
                 { to: "/user/customers", text: "Customers" },
                 { to: "/user/feedbacks", text: "Feedbacks" },
+                { to: "/user/editbot", text: "Edit bot" },
               ]}
             />
           </PrivateRoute>
@@ -62,6 +64,7 @@ const AppRoutes: React.FC = () => (
         <Route path="customers" element={<CustomersPage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="feedbacks" element={<FeedbacksPage />} />
+        <Route path="editbot" element={<EditBotData />} />
       </Route>
 
       {/* Fallback Route */}

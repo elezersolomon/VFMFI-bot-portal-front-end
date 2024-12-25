@@ -29,3 +29,11 @@ export interface Feedback {
   telegramUserName: string;
   userID: string;
 }
+export interface Content {
+  [key: string]: string | Content;
+}
+export interface botData {
+  id: string;
+  description: string;
+  content: Content;
+}

@@ -2,7 +2,7 @@ import axios from "axios";
 import { setUser } from "../redux/userSlice";
 import { AppDispatch } from "../redux";
 import { User, Customer, Feedback } from "../models";
-
+import { botData } from "../models";
 export const loginUser = async (
   dispatch: AppDispatch,
   username: string,
@@ -187,6 +187,19 @@ export const fetchFeedbacks = async (token: string): Promise<Feedback[]> => {
         },
       }
     );
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to fetch users");
+  }
+};
+
+export const getBotData = async (token: string): Promise<botData[]> => {
+  try {
+    const response = await axios.get("http://localhost:5000/api/data/BotData", {
+      headers: {
+        Authorization: `Bearer ${token}`, // Include the token in the request headers
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error("Failed to fetch users");
