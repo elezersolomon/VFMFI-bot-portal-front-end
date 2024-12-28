@@ -1,7 +1,7 @@
 import axios from "axios";
 import { setUser } from "../redux/userSlice";
 import { AppDispatch } from "../redux";
-import { User, Customer, Feedback } from "../models";
+import { User, Customer, Feedback, Content } from "../models";
 import { botData } from "../models";
 export const loginUser = async (
   dispatch: AppDispatch,
@@ -205,3 +205,28 @@ export const getBotData = async (token: string): Promise<botData[]> => {
     throw new Error("Failed to fetch users");
   }
 };
+
+export async function updateBotData(
+  token: string,
+  botData: Content,
+  description: string,
+  entry?: string
+) {
+  try {
+    const response = await axios.put(
+      `http://localhost:5000/api/data/setBotData`,
+      botData,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          entry: entry,
+          description: description,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to update user");
+  }
+}
