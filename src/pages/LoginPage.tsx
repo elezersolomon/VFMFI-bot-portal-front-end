@@ -12,28 +12,53 @@ const LoginPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const validateInputs = () => {
+    if (!username.trim()) {
+      setError("Username cannot be empty.");
+      return false;
+    }
+    if (username.length < 3) {
+      setError("Username must be at least 3 characters long.");
+      return false;
+    }
+    if (!password.trim()) {
+      setError("Password cannot be empty.");
+      return false;
+    }
+    if (password.length < 3) {
+      setError("Password must be at least 6 characters long.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateInputs()) {
+      return;
+    }
+
     try {
       const response = await loginUser(dispatch, username, password);
 
       // Check if the user is disabled
       if (response.status === "Disabled") {
         setError(
-          "Your account is disabled. Please contact website administrator."
+          "Your account is disabled. Please contact the website administrator."
         );
         return;
       }
 
       // If user is enabled, proceed with the login
-
       if (response.role === "admin") {
         navigate("/admin");
       } else {
         navigate("/user");
       }
-    } catch (err) {
-      setError("Invalid credentials");
+    } catch (err: any) {
+      setError(err.message || "An error occurred during login.");
     }
   };
 
@@ -50,6 +75,8 @@ const LoginPage: React.FC = () => {
           margin="normal"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          error={Boolean(error && error.includes("Username"))}
+          helperText={error && error.includes("Username") ? error : ""}
         />
         <TextField
           label="Password"
@@ -59,11 +86,19 @@ const LoginPage: React.FC = () => {
           margin="normal"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          error={Boolean(error && error.includes("Password"))}
+          helperText={error && error.includes("Password") ? error : ""}
         />
         <Button type="submit" variant="contained" color="primary" fullWidth>
           Login
         </Button>
-        {error && <Typography color="error">{error}</Typography>}
+        {error &&
+          !error.includes("Username") &&
+          !error.includes("Password") && (
+            <Typography color="error" align="center" marginTop="1rem">
+              {error}
+            </Typography>
+          )}
       </form>
     </Container>
   );

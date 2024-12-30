@@ -166,6 +166,7 @@ const EditBotData: React.FC = () => {
                           e.target.value
                         )
                       }
+                      multiline
                       fullWidth
                       margin="normal"
                     />
