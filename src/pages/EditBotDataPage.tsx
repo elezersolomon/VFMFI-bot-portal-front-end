@@ -5,6 +5,7 @@ import {
   TextField,
   Button,
   Stack,
+  IconButton,
 } from "@mui/material";
 import { getBotData } from "../services/api";
 import React, { useEffect, useState } from "react";
@@ -14,7 +15,8 @@ import { botData } from "../models";
 import { Content } from "../models";
 import { updateBotData } from "../services/api";
 import NotificationModal from "../components/NotificationModal";
-import userEvent from "@testing-library/user-event";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 const EditBotData: React.FC = () => {
   const [botData, setBotData] = useState<botData[]>([]);
   const token = useSelector((state: RootState) => state.user.token);
@@ -220,6 +222,50 @@ const EditBotData: React.FC = () => {
     setModalOpen(true);
   };
 
+  const handleDelete = async (
+    description: string,
+    category: string,
+    key: string
+  ) => {
+    const updatedData = botData.map((item) =>
+      item.description === description
+        ? {
+            ...item,
+            content: {
+              ...item.content,
+              [category]: Object.keys(item.content[category] || {})
+                .filter((productKey) => productKey !== key)
+                .reduce(
+                  (acc, curr) => ({
+                    ...acc,
+                    [curr]: (item.content[category] as Record<string, string>)[
+                      curr
+                    ],
+                  }),
+                  {}
+                ),
+            },
+          }
+        : item
+    );
+
+    setBotData(updatedData);
+
+    const itemToSave = updatedData.find(
+      (item) => item.description === description
+    );
+    if (itemToSave) {
+      const onSaveResponse = await updateBotData(
+        token,
+        itemToSave.content,
+        itemToSave.description
+      );
+      setMessage(onSaveResponse.message);
+      setMessageType(onSaveResponse.status);
+      setModalOpen(true);
+    }
+  };
+
   return (
     <Box sx={{ padding: 4 }}>
       {botData.map((item) => (
@@ -336,18 +382,34 @@ const EditBotData: React.FC = () => {
               {/* Existing FAQs */}
               {Object.entries(item.content.FAQList || {}).map(
                 ([key, value]) => (
-                  <TextField
+                  <Stack
                     key={key}
-                    label={`Question: ${key}`}
-                    value={value as string}
-                    onChange={(e) =>
-                      handleFaqChange(item.description, key, e.target.value)
-                    }
-                    multiline
-                    rows={3}
-                    fullWidth
-                    margin="normal"
-                  />
+                    direction="row"
+                    alignItems="center"
+                    spacing={2}
+                    sx={{ marginBottom: 2 }}
+                  >
+                    <TextField
+                      key={key}
+                      label={`Question: ${key}`}
+                      value={value as string}
+                      onChange={(e) =>
+                        handleFaqChange(item.description, key, e.target.value)
+                      }
+                      multiline
+                      rows={3}
+                      fullWidth
+                      margin="normal"
+                    />
+                    <IconButton
+                      onClick={() =>
+                        handleDelete(item.description, "FAQList", key)
+                      }
+                      color="error"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Stack>
                 )
               )}
 
