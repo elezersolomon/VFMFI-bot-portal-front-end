@@ -14,14 +14,50 @@ import { botData } from "../models";
 import { Content } from "../models";
 import { updateBotData } from "../services/api";
 import NotificationModal from "../components/NotificationModal";
+import userEvent from "@testing-library/user-event";
 const EditBotData: React.FC = () => {
-  const [data, setBotData] = useState<botData[]>([]);
+  const [botData, setBotData] = useState<botData[]>([]);
   const token = useSelector((state: RootState) => state.user.token);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<"success" | "error" | "info">(
     "info"
   );
+  const [newFaq, setNewFaq] = useState<{ question: string; answer: string }>({
+    question: "",
+    answer: "",
+  });
+  const [newSavingProduct, setNewSavingProduct] = useState({
+    name: "",
+    details: "",
+  });
+  const [newLoanProduct, setNewLoanProduct] = useState({
+    name: "",
+    details: "",
+  });
+
+  function setProductData(category: string, target: any) {
+    if (target.name == "name") {
+      if (category == "loanProducts")
+        setNewLoanProduct((prev) => ({
+          ...prev,
+          name: target.value,
+        }));
+      else if (category == "savingProducts")
+        setNewSavingProduct((prev) => ({ ...prev, name: target.value }));
+    }
+
+    if (target.name == "details") {
+      if (category == "loanProducts")
+        setNewLoanProduct((prev) => ({
+          ...prev,
+          details: target.value,
+        }));
+      else if (category == "savingProducts")
+        setNewSavingProduct((prev) => ({ ...prev, details: target.value }));
+    }
+  }
+
   useEffect(() => {
     const fetchBotData = async () => {
       try {
@@ -78,13 +114,14 @@ const EditBotData: React.FC = () => {
     );
   };
 
-  const handleFAQChange = (description: string, key: string, value: string) => {
+  const handleFaqChange = (description: string, key: string, value: string) => {
     setBotData((prevData) =>
       prevData.map((item) =>
         item.description === description
           ? {
               ...item,
               content: {
+                ...item.content,
                 FAQList: {
                   ...(item.content.FAQList as Record<string, string>),
                   [key]: value,
@@ -94,6 +131,79 @@ const EditBotData: React.FC = () => {
           : item
       )
     );
+  };
+
+  const addNewFaq = (description: string) => {
+    setBotData((prevData) =>
+      prevData.map((item) =>
+        item.description === description
+          ? {
+              ...item,
+              content: {
+                ...item.content,
+                FAQList: {
+                  ...(item.content.FAQList as Record<string, string>),
+                  [newFaq.question]: newFaq.answer,
+                },
+              },
+            }
+          : item
+      )
+    );
+    setNewFaq({ question: "", answer: "" });
+  };
+
+  const addProduct = async (
+    description: string,
+    category: string,
+    item: any
+  ) => {
+    let newProduct: any = {
+      name: "",
+      details: "",
+    };
+    let setProduct: any = "";
+    if (category == "loanProducts") {
+      newProduct = newLoanProduct;
+      setProduct = setNewLoanProduct;
+    } else if (category == "savingProducts") {
+      setProduct = setNewSavingProduct;
+      newProduct = newSavingProduct;
+    }
+
+    const currentData = await botData.map((item) =>
+      item.description === description
+        ? {
+            ...item,
+            content: {
+              ...item.content,
+              [category]: {
+                ...(item.content[category] as Record<string, string>),
+                [newProduct.name]: newProduct.details,
+              },
+            },
+          }
+        : item
+    );
+    setBotData(currentData);
+
+    let items: any;
+    currentData.map((item) => {
+      if (item.description == description) {
+        items = item;
+      }
+    });
+
+    const onSaveResponse = await updateBotData(
+      token,
+      items.content,
+      item.description
+    );
+
+    setMessage(onSaveResponse.message);
+    setMessageType(onSaveResponse.status);
+    setModalOpen(true);
+    setProduct({ name: "", details: "" });
   };
 
   const saveChangesForItem = async (item: botData) => {
@@ -112,8 +222,8 @@ const EditBotData: React.FC = () => {
 
   return (
     <Box sx={{ padding: 4 }}>
-      {data.map((item) => (
-        <Paper key={item.id} sx={{ padding: 3, marginBottom: 4 }}>
+      {botData.map((item) => (
+        <Paper key={item.id} sx={{ padding: 5, margin: 3 }}>
           <Box sx={{ textAlign: "center", marginBottom: 2 }}>
             <Typography variant="h5">{item.description}</Typography>
           </Box>
@@ -151,45 +261,130 @@ const EditBotData: React.FC = () => {
           {item.description === "products" &&
             ["savingProducts", "loanProducts"].map((category) => (
               <Box key={category} sx={{ marginBottom: 3 }}>
-                <Typography variant="h6">{category}</Typography>
-                {Object.entries(item.content[category] || {}).map(
-                  ([key, value]) => (
+                <Paper key={item.id} sx={{ padding: 5, margin: 3 }}>
+                  <Typography variant="h6">{category}</Typography>
+                  {Object.entries(item.content[category] || {}).map(
+                    ([key, value]) => (
+                      <TextField
+                        key={key}
+                        label={key}
+                        value={value as string}
+                        onChange={(e) =>
+                          handleNestedInputChange(
+                            item.description,
+                            category,
+                            key,
+                            e.target.value
+                          )
+                        }
+                        multiline
+                        fullWidth
+                        margin="normal"
+                      />
+                    )
+                  )}
+
+                  <Box sx={{ marginTop: 3 }}>
+                    <Typography variant="h6">Add New {category}</Typography>
                     <TextField
-                      key={key}
-                      label={key}
-                      value={value as string}
-                      onChange={(e) =>
-                        handleNestedInputChange(
-                          item.description,
-                          category,
-                          key,
-                          e.target.value
-                        )
+                      name="name"
+                      label="Product Name"
+                      value={
+                        category == "loanProducts"
+                          ? newLoanProduct.name
+                          : newSavingProduct.name
                       }
-                      multiline
+                      onChange={(e) => setProductData(category, e.target)}
                       fullWidth
                       margin="normal"
                     />
-                  )
-                )}
+                    <TextField
+                      name="details"
+                      label="Product Dtail"
+                      value={
+                        category == "loanProducts"
+                          ? newLoanProduct.details
+                          : newSavingProduct.details
+                      }
+                      onChange={(e) => setProductData(category, e.target)}
+                      multiline
+                      rows={3}
+                      fullWidth
+                      margin="normal"
+                    />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() =>
+                        addProduct(item.description, category, item)
+                      }
+                      disabled={
+                        category == "loanProducts"
+                          ? !newLoanProduct.name || !newLoanProduct.name
+                          : !newSavingProduct.name || !newSavingProduct.details
+                      }
+                    >
+                      Add {category}
+                    </Button>
+                  </Box>
+                </Paper>
               </Box>
             ))}
 
-          {item.description === "FAQs" &&
-            Object.entries(item.content.FAQList || {}).map(([key, value]) => (
-              <TextField
-                key={key}
-                label={key}
-                value={value as string}
-                onChange={(e) =>
-                  handleFAQChange(item.description, key, e.target.value)
-                }
-                multiline
-                rows={3}
-                fullWidth
-                margin="normal"
-              />
-            ))}
+          {item.description === "FAQs" && (
+            <>
+              {/* Existing FAQs */}
+              {Object.entries(item.content.FAQList || {}).map(
+                ([key, value]) => (
+                  <TextField
+                    key={key}
+                    label={`Question: ${key}`}
+                    value={value as string}
+                    onChange={(e) =>
+                      handleFaqChange(item.description, key, e.target.value)
+                    }
+                    multiline
+                    rows={3}
+                    fullWidth
+                    margin="normal"
+                  />
+                )
+              )}
+
+              {/* Add New FAQ */}
+              <Box sx={{ marginTop: 3 }}>
+                <Typography variant="h6">Add New FAQ</Typography>
+                <TextField
+                  label="Question"
+                  value={newFaq.question}
+                  onChange={(e) =>
+                    setNewFaq((prev) => ({ ...prev, question: e.target.value }))
+                  }
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="Answer"
+                  value={newFaq.answer}
+                  onChange={(e) =>
+                    setNewFaq((prev) => ({ ...prev, answer: e.target.value }))
+                  }
+                  multiline
+                  rows={3}
+                  fullWidth
+                  margin="normal"
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => addNewFaq(item.description)}
+                  disabled={!newFaq.question || !newFaq.answer}
+                >
+                  Add FAQ
+                </Button>
+              </Box>
+            </>
+          )}
 
           <Stack
             direction="row"

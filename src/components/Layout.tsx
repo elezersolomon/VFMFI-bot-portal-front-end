@@ -152,7 +152,7 @@ const Layout: React.FC<LayoutProps> = ({ links, role }) => {
             sx={{
               p: 4,
               bgcolor: "background.paper",
-              boxShadow: 3,
+              // boxShadow: 3,
               borderRadius: 2,
               width: "100%",
               maxWidth: 1500,
