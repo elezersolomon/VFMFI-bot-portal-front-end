@@ -135,7 +135,7 @@ const EditBotData: React.FC = () => {
     );
   };
 
-  const addNewFaq = (description: string) => {
+  const addNewFaq = async (description: string) => {
     setBotData((prevData) =>
       prevData.map((item) =>
         item.description === description
@@ -152,6 +152,39 @@ const EditBotData: React.FC = () => {
           : item
       )
     );
+
+    const currentData = await botData.map((item) =>
+      item.description === description
+        ? {
+            ...item,
+            content: {
+              ...item.content,
+              FAQList: {
+                ...(item.content.FAQList as Record<string, string>),
+                [newFaq.question]: newFaq.answer,
+              },
+            },
+          }
+        : item
+    );
+    setBotData(currentData);
+
+    let items: any;
+    currentData.map((item) => {
+      if (item.description == description) {
+        items = item;
+      }
+    });
+
+    const onSaveResponse = await updateBotData(
+      token,
+      items.content,
+      items.description
+    );
+
+    setMessage(`FAQ has been added successfully`);
+    setMessageType(onSaveResponse.status);
+    setModalOpen(true);
     setNewFaq({ question: "", answer: "" });
   };
 
@@ -202,7 +235,7 @@ const EditBotData: React.FC = () => {
       item.description
     );
 
-    setMessage(onSaveResponse.message);
+    setMessage(`Product has been added successfully`);
     setMessageType(onSaveResponse.status);
     setModalOpen(true);
     setProduct({ name: "", details: "" });
@@ -260,7 +293,7 @@ const EditBotData: React.FC = () => {
         itemToSave.content,
         itemToSave.description
       );
-      setMessage(onSaveResponse.message);
+      setMessage(`FAQ has been deleted successfully`);
       setMessageType(onSaveResponse.status);
       setModalOpen(true);
     }
@@ -311,22 +344,38 @@ const EditBotData: React.FC = () => {
                   <Typography variant="h6">{category}</Typography>
                   {Object.entries(item.content[category] || {}).map(
                     ([key, value]) => (
-                      <TextField
+                      <Stack
                         key={key}
-                        label={key}
-                        value={value as string}
-                        onChange={(e) =>
-                          handleNestedInputChange(
-                            item.description,
-                            category,
-                            key,
-                            e.target.value
-                          )
-                        }
-                        multiline
-                        fullWidth
-                        margin="normal"
-                      />
+                        direction="row"
+                        alignItems="center"
+                        spacing={2}
+                        sx={{ marginBottom: 2 }}
+                      >
+                        <TextField
+                          key={key}
+                          label={key}
+                          value={value as string}
+                          onChange={(e) =>
+                            handleNestedInputChange(
+                              item.description,
+                              category,
+                              key,
+                              e.target.value
+                            )
+                          }
+                          multiline
+                          fullWidth
+                          margin="normal"
+                        />
+                        <IconButton
+                          onClick={() =>
+                            handleDelete(item.description, category, key)
+                          }
+                          color="error"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Stack>
                     )
                   )}
 
@@ -336,7 +385,7 @@ const EditBotData: React.FC = () => {
                       name="name"
                       label="Product Name"
                       value={
-                        category == "loanProducts"
+                        category === "loanProducts"
                           ? newLoanProduct.name
                           : newSavingProduct.name
                       }
@@ -346,9 +395,9 @@ const EditBotData: React.FC = () => {
                     />
                     <TextField
                       name="details"
-                      label="Product Dtail"
+                      label="Product Detail"
                       value={
-                        category == "loanProducts"
+                        category === "loanProducts"
                           ? newLoanProduct.details
                           : newSavingProduct.details
                       }
@@ -365,7 +414,7 @@ const EditBotData: React.FC = () => {
                         addProduct(item.description, category, item)
                       }
                       disabled={
-                        category == "loanProducts"
+                        category === "loanProducts"
                           ? !newLoanProduct.name || !newLoanProduct.name
                           : !newSavingProduct.name || !newSavingProduct.details
                       }

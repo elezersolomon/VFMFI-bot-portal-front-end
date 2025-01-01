@@ -136,14 +136,14 @@ const ListCustomers: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Customer List
       </Typography>
-      <Button
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={handleAddCustomer}
         style={{ marginBottom: "16px" }} // Add some spacing
       >
         Add New Customer
-      </Button>
+      </Button> */}
       <TextField
         label="Search Customers"
         variant="outlined"
