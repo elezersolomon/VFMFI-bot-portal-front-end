@@ -300,7 +300,7 @@ const EditBotData: React.FC = () => {
   };
 
   return (
-    <Box sx={{ padding: 4 }}>
+    <Box sx={{ width: "100%" }}>
       {botData.map((item) => (
         <Paper key={item.id} sx={{ padding: 5, margin: 3 }}>
           <Box sx={{ textAlign: "center", marginBottom: 2 }}>
@@ -349,7 +349,7 @@ const EditBotData: React.FC = () => {
                         direction="row"
                         alignItems="center"
                         spacing={2}
-                        sx={{ marginBottom: 2 }}
+                        sx={{ marginBottom: 2, marginTop: 3 }}
                       >
                         <TextField
                           key={key}

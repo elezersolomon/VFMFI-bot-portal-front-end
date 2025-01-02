@@ -131,35 +131,25 @@ const Layout: React.FC<LayoutProps> = ({ links, role }) => {
       </Drawer>
 
       <Box
-        component="main"
         sx={{
-          flexGrow: 1,
-          bgcolor: "background.default",
-          p: 3,
-          mt: "64px",
+          boxShadow: 3,
+          borderRadius: 2,
+          width: "100%",
+          // maxWidth: 1500,
         }}
       >
         <Container
           sx={{
+            mt: "64px",
             display: "flex",
             justifyContent: "center",
             alignItems: "flex-start",
-            height: "calc(100vh - 64px)",
+            // height: "calc(100vh - 64px)",
             width: "100%",
           }}
         >
-          <Box
-            sx={{
-              p: 4,
-              bgcolor: "background.paper",
-              // boxShadow: 3,
-              borderRadius: 2,
-              width: "100%",
-              maxWidth: 1500,
-            }}
-          >
-            <Outlet />
-          </Box>
+          {" "}
+          <Outlet />
         </Container>
       </Box>
     </Box>
