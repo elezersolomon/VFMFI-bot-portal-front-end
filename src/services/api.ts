@@ -1,8 +1,30 @@
 import axios from "axios";
-import { setUser } from "../redux/userSlice";
 import { AppDispatch } from "../redux";
 import { User, Customer, Feedback, Content } from "../models";
 import { botData } from "../models";
+import { userSlice } from "../redux/userSlice"; // Import the store
+import { store } from "../redux/store";
+import { setUser, updateToken } from "../redux/userSlice";
+let Token = "";
+axios.interceptors.response.use(
+  (response) => {
+    const newToken = response.headers["token"]; // Check if token is in headers
+    console.log("consoleData_ response", newToken);
+    if (newToken) {
+      console.log("consoleData_newtoken", newToken);
+      Token = newToken; // Update token in Redux
+    }
+    console.log("consoleData_ tok", Token);
+    return response;
+  },
+  (error) => {
+    if (error.response?.data?.message === "token expired") {
+      window.location.href = "/login"; // Redirect to login on token expiry
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const loginUser = async (
   dispatch: AppDispatch,
   username: string,
@@ -15,6 +37,7 @@ export const loginUser = async (
   const { id, firstName, lastName, role, email, phoneNumber, status } =
     response.data.user;
   const token = response.data.token;
+  Token = response.data.token;
   dispatch(
     setUser({
       userID: id,
@@ -101,6 +124,7 @@ export const updateUser = async (
     throw new Error("Failed to update user");
   }
 };
+
 export const resetUserPassword = async (
   data: {
     username: string;
@@ -116,7 +140,7 @@ export const resetUserPassword = async (
       data,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${Token}`,
         },
       }
     );
@@ -130,7 +154,7 @@ export const fetchCustomers = async (token: string) => {
   try {
     const response = await axios.get(`http://localhost:5000/api/Customers`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${Token}`,
       },
     });
     return response.data;
@@ -145,7 +169,7 @@ export const updateCustomer = async (customer: Customer, token: string) => {
     customer,
     {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${Token}`,
       },
     }
   );
@@ -169,7 +193,7 @@ export const createCustomer = async (
     customerData,
     {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${Token}`,
       },
     }
   );
@@ -178,12 +202,13 @@ export const createCustomer = async (
 };
 
 export const fetchFeedbacks = async (token: string): Promise<Feedback[]> => {
+  console.log("consoleData_ Token", Token);
   try {
     const response = await axios.get(
       "http://localhost:5000/api/data/getFeedbacks",
       {
         headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the request headers
+          Authorization: `Bearer ${Token}`, // Include the token in the request headers
         },
       }
     );
@@ -197,9 +222,11 @@ export const getBotData = async (token: string): Promise<botData[]> => {
   try {
     const response = await axios.get("http://localhost:5000/api/data/BotData", {
       headers: {
-        Authorization: `Bearer ${token}`, // Include the token in the request headers
+        Authorization: `Bearer ${Token}`, // Include the token in the request headers
       },
     });
+    if (response.headers.token == "token expired") {
+    }
     return response.data;
   } catch (error) {
     throw new Error("Failed to fetch users");
@@ -219,7 +246,7 @@ export async function updateBotData(
 
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${Token}`,
           entry: entry,
           description: description,
         },
