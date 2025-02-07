@@ -5,16 +5,16 @@ import { botData } from "../models";
 import { userSlice } from "../redux/userSlice"; // Import the store
 import { store } from "../redux/store";
 import { setUser, updateToken } from "../redux/userSlice";
-let Token = "";
+let token = "";
+
 axios.interceptors.response.use(
   (response) => {
-    const newToken = response.headers["token"]; // Check if token is in headers
-    console.log("consoleData_ response", newToken);
+    const newToken = response.headers.token; // Ensure the backend sends it here
+    console.log("consoleData_new token", newToken);
     if (newToken) {
-      console.log("consoleData_newtoken", newToken);
-      Token = newToken; // Update token in Redux
+      store.dispatch(updateToken(newToken.replace("Bearer ", newToken))); // Update Redux token
     }
-    console.log("consoleData_ tok", Token);
+
     return response;
   },
   (error) => {
@@ -24,6 +24,55 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// axios.interceptors.response.use(
+//   (response) => {
+//     const newToken = response.headers["token"]; // Check if token is in headers
+//     console.log("consoleData_ response", newToken);
+//     if (newToken) {
+//       console.log("consoleData_newtoken", newToken);
+//       token = newToken; // Update token in Redux
+//     }
+//     console.log("consoleData_ tok", token);
+//     return response;
+//   },
+//   (error) => {
+//     if (error.response?.data?.message === "token expired") {
+//       window.location.href = "/login"; // Redirect to login on token expiry
+//     }
+//     return Promise.reject(error);
+//   }
+// );
+
+// axios.interceptors.response.use(
+//   (response) => {
+//     if (response.data.message === "token expired") {
+//       console.log(
+//         "consoleData_ token expired response",
+//         response.headers.token
+//       );
+//       window.location.href = "/login"; // Direct navigation for simplicity
+//     }
+
+//     const state = userSlice.getInitialState();
+//     store.dispatch(
+//       setUser({
+//         ...state,
+//         token: response.headers.token,
+//       })
+//     );
+//     console.log("consoleData_ state", state);
+
+//     return response;
+//   },
+//   (error) => {
+//     if (error.response?.data?.message === "token expired") {
+//       // Navigate to login
+//       window.location.href = "/login"; // Direct navigation for simplicity
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 export const loginUser = async (
   dispatch: AppDispatch,
@@ -37,7 +86,7 @@ export const loginUser = async (
   const { id, firstName, lastName, role, email, phoneNumber, status } =
     response.data.user;
   const token = response.data.token;
-  Token = response.data.token;
+  // token = response.data.token;
   dispatch(
     setUser({
       userID: id,
@@ -140,7 +189,7 @@ export const resetUserPassword = async (
       data,
       {
         headers: {
-          Authorization: `Bearer ${Token}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -154,7 +203,7 @@ export const fetchCustomers = async (token: string) => {
   try {
     const response = await axios.get(`http://localhost:5000/api/Customers`, {
       headers: {
-        Authorization: `Bearer ${Token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.data;
@@ -169,7 +218,7 @@ export const updateCustomer = async (customer: Customer, token: string) => {
     customer,
     {
       headers: {
-        Authorization: `Bearer ${Token}`,
+        Authorization: `Bearer ${token}`,
       },
     }
   );
@@ -193,7 +242,7 @@ export const createCustomer = async (
     customerData,
     {
       headers: {
-        Authorization: `Bearer ${Token}`,
+        Authorization: `Bearer ${token}`,
       },
     }
   );
@@ -202,13 +251,13 @@ export const createCustomer = async (
 };
 
 export const fetchFeedbacks = async (token: string): Promise<Feedback[]> => {
-  console.log("consoleData_ Token", Token);
+  // console.log("consoleData_ token", token);
   try {
     const response = await axios.get(
       "http://localhost:5000/api/data/getFeedbacks",
       {
         headers: {
-          Authorization: `Bearer ${Token}`, // Include the token in the request headers
+          Authorization: `Bearer ${token}`, // Include the token in the request headers
         },
       }
     );
@@ -222,11 +271,12 @@ export const getBotData = async (token: string): Promise<botData[]> => {
   try {
     const response = await axios.get("http://localhost:5000/api/data/BotData", {
       headers: {
-        Authorization: `Bearer ${Token}`, // Include the token in the request headers
+        Authorization: `Bearer ${token}`, // Include the token in the request headers
       },
     });
     if (response.headers.token == "token expired") {
     }
+    console.log("value", token);
     return response.data;
   } catch (error) {
     throw new Error("Failed to fetch users");
@@ -246,7 +296,7 @@ export async function updateBotData(
 
       {
         headers: {
-          Authorization: `Bearer ${Token}`,
+          Authorization: `Bearer ${token}`,
           entry: entry,
           description: description,
         },
