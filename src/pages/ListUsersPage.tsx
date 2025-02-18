@@ -75,12 +75,19 @@ const ListUsers: React.FC = () => {
   }
 
   return (
-    <Box>
+    <Box
+      sx={{
+        width: "100%",
+      }}
+    >
+      <Typography textAlign="center" variant="h4">
+        List Users
+      </Typography>
       <TextField
         label="Search Users"
         variant="outlined"
-        fullWidth
         margin="normal"
+        fullWidth
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />

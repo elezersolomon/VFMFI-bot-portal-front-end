@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  LineChart,
   PieChart,
   Pie,
   Cell,
@@ -12,6 +11,7 @@ import {
   Legend,
   ResponsiveContainer,
   Line,
+  LineChart,
 } from "recharts";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
 import { getDashboardData } from "../services/api";
@@ -28,7 +28,13 @@ const COLORS = [
   "#FF6384",
 ];
 
-const Dashboard: React.FC = () => {
+const statusColors: Record<string, string> = {
+  InProgress: "#FFBB28", // Green
+  Contacted: "#00C49F", // Red
+  New: "#F44336",
+};
+
+const UsersDashboard: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(
     null
   );
@@ -85,106 +91,50 @@ const Dashboard: React.FC = () => {
           ) // Sort by date
       : [];
   };
+
   const prepareLineData = (obj: Record<string, number>) => {
-    return Object.entries(obj).map(([key, value]) => ({
-      status: key, // "Active" or "Disabled"
-      count: value,
-    }));
+    return Object.entries(obj)
+      .map(([key, value]) => ({
+        date: key, // "Active" or "Disabled"
+        count: value,
+      }))
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()); // Sort by date;
   };
+
   return (
     <Grid container spacing={2}>
-      {/* Users by Role Pie Chart */}
+      {Object.entries(dashboardData.users.countByStatus).map(
+        ([status, count]) => (
+          <Grid spacing={2} item xs={12} sm={6} md={4} key={status}>
+            <Card
+              sx={{
+                borderLeft: `6px solid ${statusColors[status] || "#2196F3"}`,
+                height: 150, // Increased card height
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <CardContent sx={{ textAlign: "center" }}>
+                <Typography variant="h6">{status} Users</Typography>
+                <Typography variant="h4" fontWeight="bold">
+                  {typeof count == "number" ? count : 0}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        )
+      )}
+
       <Grid item xs={12} md={6}>
         <Card>
           <CardContent>
-            <Typography variant="h6">Users by Role</Typography>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={preparePortalUserDataByRole(
-                    dashboardData.portalUsers.countByCategory
-                  )}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={100}
-                  fill="#82ca9d"
-                  dataKey="value"
-                >
-                  {preparePortalUserDataByRole(
-                    dashboardData.portalUsers.countByCategory
-                  ).map((_, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </Grid>
-      {/* Users by Role Pie Chart */}
-      <Grid item xs={12} md={6}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6">Users by Role</Typography>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={preparePortalUserRoleDataByStatus(
-                    dashboardData.portalUsers.countByStatus
-                  )}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={100}
-                  fill="#82ca9d"
-                  dataKey="value"
-                >
-                  {preparePortalUserRoleDataByStatus(
-                    dashboardData.portalUsers.countByStatus
-                  ).map((_, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </Grid>
-      {/* Users by Date Registered Bar Chart */}
-      <Grid item xs={12}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6">Users by Date Registered</Typography>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={prepareBarData(dashboardData.users.countByDate)}>
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="count" fill="#8884d8" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6">User Status Trend</Typography>
+            <Typography variant="h6">User Creation Graph</Typography>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart
-                data={prepareLineData(dashboardData.portalUsers.countByDate)}
+                data={prepareLineData(dashboardData.users.countByDate)}
               >
-                <XAxis dataKey="status" />
+                <XAxis dataKey="date" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
@@ -199,9 +149,32 @@ const Dashboard: React.FC = () => {
           </CardContent>
         </Card>
       </Grid>
-      ;
+
+      <Grid item xs={12} md={6}>
+        <Card>
+          <CardContent>
+            <Typography variant="h6">First Time Bot Visits</Typography>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart
+                data={prepareLineData(dashboardData.leads.countByDate)}
+              >
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="count"
+                  stroke="#0088FE"
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </Grid>
     </Grid>
   );
 };
 
-export default Dashboard;
+export default UsersDashboard;

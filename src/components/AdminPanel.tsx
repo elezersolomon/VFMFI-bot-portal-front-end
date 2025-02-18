@@ -4,7 +4,7 @@ import Layout from "./Layout";
 
 const AdminPanel: React.FC = () => {
   const adminLinks = [
-    { to: "dashboard", text: "Dashboard" }, // Dashboard is the first link
+    { to: "admin-dashboard", text: "Dashboard" }, // Dashboard is the first link
     { to: "create-user", text: "Create User" },
     { to: "list-users", text: "List Users" },
   ];

@@ -110,10 +110,18 @@ const EditUser: React.FC = () => {
   return (
     <Box
       component="form"
-      sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 8 }}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        mt: 8,
+        width: "100%",
+      }}
       onSubmit={handleSubmit}
     >
-      <Typography variant="h4">Edit User</Typography>
+      <Typography textAlign="center" variant="h4">
+        Edit User
+      </Typography>
       <TextField
         label="First Name"
         name="firstName"

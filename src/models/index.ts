@@ -37,3 +37,45 @@ export interface botData {
   description: string;
   content: Content;
 }
+
+export type DashboardData = {
+  FAQs: {
+    totalCount: number;
+    countByCategory: Record<string, number>;
+    countByDate: Record<string, number>;
+  };
+  botData: {
+    totalCount: number;
+    countByCategory: Record<string, number>;
+  };
+  chatData: {
+    totalCount: number;
+    countByCategory: Record<string, number>;
+    countByDate: Record<string, number>;
+  };
+  feedbacks: {
+    totalCount: number;
+    countByCategory: Record<string, number>;
+    countByDate: Record<string, number>;
+    countByStatus: Record<string, number>;
+  };
+  leads: {
+    totalCount: number;
+    countByCategory: Record<string, number>;
+    countByDate: Record<string, number>;
+    countByStatus: Record<string, number>;
+  };
+  portalUsers: {
+    totalCount: number;
+    countByCategory: Record<string, number>;
+    countByDate: Record<string, number>;
+    countByStatus: Record<string, number>;
+  };
+  users: {
+    totalCount: number;
+    countByCategory: Record<string, number>;
+    countByDate: Record<string, number>;
+    countByStatus: Record<string, number>;
+    countByUser: Record<string, number>;
+  };
+};

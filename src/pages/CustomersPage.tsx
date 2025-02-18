@@ -133,7 +133,7 @@ const ListCustomers: React.FC = () => {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
+      <Typography textAlign="center" variant="h4" gutterBottom>
         Customer List
       </Typography>
       {/* <Button

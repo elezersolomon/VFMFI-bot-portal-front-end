@@ -53,11 +53,13 @@ const LoginPage: React.FC = () => {
 
       // If user is enabled, proceed with the login
       if (response.role === "admin") {
-        navigate("/admin");
+        navigate("/admin/admin-dashboard");
       } else {
-        navigate("/user");
+        navigate("/user/user-dashboard");
       }
     } catch (err: any) {
+      console.log("consoleData_ err.message", err.message);
+
       setError(err.message || "An error occurred during login.");
     }
   };

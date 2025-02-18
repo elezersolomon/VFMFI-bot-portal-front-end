@@ -99,7 +99,7 @@ const Layout: React.FC<LayoutProps> = ({ links, role }) => {
           "& .MuiDrawer-paper": {
             width: 240,
             boxSizing: "border-box",
-            top: "64px",
+            top: "64x",
             bgcolor: "primary.main",
             color: "primary.contrastText",
             zIndex: 1100,
@@ -107,13 +107,17 @@ const Layout: React.FC<LayoutProps> = ({ links, role }) => {
           },
         }}
       >
-        <List>
+        <List
+          sx={{
+            top: "100px",
+          }}
+        >
           {links.map((link) => (
             <Paper
               key={link.to}
               elevation={3}
               sx={{
-                my: 1,
+                my: 1.5,
                 mx: 2,
                 bgcolor: "primary.light",
                 color: "primary.contrastText",
@@ -123,7 +127,12 @@ const Layout: React.FC<LayoutProps> = ({ links, role }) => {
               }}
             >
               <ListItem button component={Link} to={link.to}>
-                <ListItemText primary={link.text} sx={{ pl: 4 }} />
+                <ListItemText
+                  primary={link.text}
+                  sx={{
+                    textAlign: "center",
+                  }}
+                />
               </ListItem>
             </Paper>
           ))}
@@ -132,7 +141,7 @@ const Layout: React.FC<LayoutProps> = ({ links, role }) => {
 
       <Box
         sx={{
-          boxShadow: 3,
+          boxShadow: 0,
           borderRadius: 2,
           width: "100%",
           // maxWidth: 1500,

@@ -119,7 +119,9 @@ const CreateUserPage: React.FC = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <Typography variant="h4">Create New User</Typography>
+        <Typography textAlign="center" variant="h4" gutterBottom>
+          Create New User
+        </Typography>
         <TextField
           label="Username"
           name="username"

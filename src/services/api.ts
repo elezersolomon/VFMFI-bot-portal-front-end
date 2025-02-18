@@ -1,35 +1,46 @@
 import axios from "axios";
 import { setUser } from "../redux/userSlice";
 import { AppDispatch } from "../redux";
-import { User, Customer, Feedback, Content } from "../models";
-import { botData } from "../models";
+import {
+  botData,
+  User,
+  Customer,
+  Feedback,
+  Content,
+  DashboardData,
+} from "../models";
 export const loginUser = async (
   dispatch: AppDispatch,
   username: string,
   password: string
 ) => {
-  const response = await axios.post("http://localhost:5000/api/auth/login", {
-    username,
-    password,
-  });
-  const { id, firstName, lastName, role, email, phoneNumber, status } =
-    response.data.user;
-  const token = response.data.token;
-  dispatch(
-    setUser({
-      userID: id,
+  try {
+    const response = await axios.post("http://localhost:5000/api/auth/login", {
       username,
-      firstName,
-      lastName,
-      role,
-      email,
-      phoneNumber,
-      token,
-      status,
-    })
-  );
+      password,
+    });
+    const { id, firstName, lastName, role, email, phoneNumber, status } =
+      response.data.user;
+    const token = response.data.token;
+    dispatch(
+      setUser({
+        userID: id,
+        username,
+        firstName,
+        lastName,
+        role,
+        email,
+        phoneNumber,
+        token,
+        status,
+      })
+    );
 
-  return { role: role, status: status };
+    return { role: role, status: status };
+  } catch (error: any) {
+    console.log("consoleData_ error", error.response.data.message);
+    throw error.response.data;
+  }
 };
 
 export const fetchUsers = async (token: string): Promise<User[]> => {
@@ -230,3 +241,24 @@ export async function updateBotData(
     throw new Error("Failed to update user");
   }
 }
+
+export const getDashboardData = async (
+  token: string
+): Promise<DashboardData> => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5000/api/data/getDashboardData",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the request headers
+        },
+      }
+    );
+
+    console.log("consoleData_ response", response);
+
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to fetch users");
+  }
+};

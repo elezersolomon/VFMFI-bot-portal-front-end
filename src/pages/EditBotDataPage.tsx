@@ -301,6 +301,9 @@ const EditBotData: React.FC = () => {
 
   return (
     <Box sx={{ width: "100%" }}>
+      <Typography textAlign="center" variant="h4" gutterBottom>
+        Edit Bot Data
+      </Typography>
       {botData.map((item) => (
         <Paper key={item.id} sx={{ padding: 5, margin: 3 }}>
           <Box sx={{ textAlign: "center", marginBottom: 2 }}>

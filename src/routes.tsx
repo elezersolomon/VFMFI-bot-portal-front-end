@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import AdminPanel from "./components/AdminPanel";
-import Dashboard from "./pages/Dashboard"; // Import the dashboard page
+import AdminDashboard from "./pages/AdminDashboard"; // Import the dashboard page
 import CreateUserPage from "./pages/CreateUserPage";
 import ListUsersPage from "./pages/ListUsersPage";
 import EditUserPage from "./pages/EditUserPage";
@@ -13,7 +13,7 @@ import CustomersPage from "./pages/CustomersPage";
 import FeedbacksPage from "./pages/feedbacksPage";
 import PrivateRoute from "./components/PrivateRoute";
 import EditBotData from "./pages/EditBotDataPage";
-
+import UsersDashboard from "./pages/UsersDashboard";
 const AppRoutes: React.FC = () => (
   <BrowserRouter>
     <Routes>
@@ -28,21 +28,28 @@ const AppRoutes: React.FC = () => (
             <Layout
               role="admin"
               links={[
-                { to: "/admin/dashboard", text: "Dashboard" }, // Add Dashboard link
+                { to: "/admin/admin-dashboard", text: "Dashboard" }, // Add Dashboard link
                 { to: "/admin/create-user", text: "Create User" },
                 { to: "/admin/list-users", text: "List Users" },
+                { to: "/admin/customers", text: "Manage Customers" },
+                { to: "/admin/feedbacks", text: "Feedbacks" },
+                { to: "/admin/editbot", text: "Edit bot" },
               ]}
             />
           </PrivateRoute>
         }
       >
-        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="admin-dashboard" element={<AdminDashboard />} />
         <Route path="create-user" element={<CreateUserPage />} />
         <Route path="list-users" element={<ListUsersPage />} />
         <Route path="edit-user/:id" element={<EditUserPage />} />
         <Route path="settings" element={<SettingsPage />} />
         {/* Redirect to dashboard by default if no other child route is matched */}
         <Route index element={<Navigate to="dashboard" />} />
+        <Route path="customers" element={<CustomersPage />} />
+        <Route path="settings" element={<SettingsPage />} />
+        <Route path="feedbacks" element={<FeedbacksPage />} />
+        <Route path="editbot" element={<EditBotData />} />
       </Route>
 
       {/* Private Routes for User */}
@@ -53,7 +60,8 @@ const AppRoutes: React.FC = () => (
             <Layout
               role="user"
               links={[
-                { to: "/user/customers", text: "Customers" },
+                { to: "/user/user-dashboard", text: "Dashboard" },
+                { to: "/user/customers", text: "Manage Customers" },
                 { to: "/user/feedbacks", text: "Feedbacks" },
                 { to: "/user/editbot", text: "Edit bot" },
               ]}
@@ -61,6 +69,7 @@ const AppRoutes: React.FC = () => (
           </PrivateRoute>
         }
       >
+        <Route path="user-dashboard" element={<UsersDashboard />} />
         <Route path="customers" element={<CustomersPage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="feedbacks" element={<FeedbacksPage />} />

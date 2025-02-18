@@ -1,13 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Box,
-  Grid,
-  Typography,
-  Paper,
-  CircularProgress,
-  useTheme,
-} from "@mui/material";
-import {
+  LineChart,
   PieChart,
   Pie,
   Cell,
@@ -17,125 +10,229 @@ import {
   YAxis,
   Tooltip,
   Legend,
+  ResponsiveContainer,
+  Line,
 } from "recharts";
-import axios from "axios";
-// Define types
-interface UserData {
-  role: string;
-  count: number;
-}
+import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { getDashboardData } from "../services/api";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux";
+import { DashboardData } from "../models";
 
-interface CustomerData {
-  status: string;
-  count: number;
-}
+const COLORS = [
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+  "#A28DFF",
+  "#FF6384",
+];
 
 const AdminDashboard: React.FC = () => {
-  const [userData, setUserData] = useState<UserData[]>([]);
-  const [customerData, setCustomerData] = useState<CustomerData[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(
+    null
+  );
+  const token = useSelector((state: RootState) => state.user.token);
 
-  const theme = useTheme();
-
-  // Fetch users and customers data
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDashboardData = async () => {
       try {
-        const [usersResponse, customersResponse] = await Promise.all([
-          axios.get("http://localhost:5000/api/users/stats"), // API endpoint for users data
-          axios.get("http://localhost:5000/api/customers/stats"), // API endpoint for customers data
-        ]);
-        setUserData(usersResponse.data);
-        setCustomerData(customersResponse.data);
+        const data = await getDashboardData(token);
+        console.log("consoleData_ dashboard data", data);
+        setDashboardData(data);
       } catch (error) {
-        setError("Failed to load dashboard data.");
-      } finally {
-        setLoading(false);
+        console.error("Error fetching dashboard data:", error);
+        setDashboardData(null);
       }
     };
-    fetchData();
-  }, []);
+    fetchDashboardData();
+  }, [token]);
 
-  // Pie chart colors
-  const COLORS = [
-    theme.palette.primary.main,
-    theme.palette.secondary.main,
-    theme.palette.error.main,
-  ];
+  if (!dashboardData) return <Typography>Loading...</Typography>;
+  const preparePortalUserDataByRole = (
+    obj: Record<string, number> | undefined
+  ) => {
+    return obj
+      ? Object.entries(obj).map(([key, value]) => ({ name: key, value }))
+      : [];
+  };
 
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center">
-        <CircularProgress />
-      </Box>
-    );
-  }
+  const preparePortalUserRoleDataByStatus = (obj: Record<string, number>) => {
+    return Object.entries(obj).map(([key, value]) => ({
+      name: key, // "Active" or "Disabled"
+      value: value,
+    }));
+  };
 
-  if (error) {
-    return <Typography color="error">{error}</Typography>;
-  }
+  const prepareBarData = (obj: Record<string, number>) => {
+    return obj
+      ? Object.entries(obj)
+          .filter(([key]) => key !== "Invalid Date") // Remove invalid dates
+          .map(([key, value]) => ({ date: key, count: value }))
+          .sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+          ) // Sort by date
+      : [];
+  };
+  const prepareLineData = (obj: Record<string, number>) => {
+    return Object.entries(obj)
+      .map(([key, value]) => ({
+        date: key, // "Active" or "Disabled"
+        count: value,
+      }))
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()); // Sort by date;
+  };
+
+  const UserStatStatusColors: Record<string, string> = {
+    Active: "#4CAF50", // Green
+    Disabled: "#F44336", // Red
+  };
+
+  const CustomerStatStatusColors: Record<string, string> = {
+    InProgress: "#FFBB28", // Green
+    Contacted: "#00C49F", // Red
+    New: "#F44336",
+  };
 
   return (
-    <Box p={4}>
-      <Typography variant="h4" gutterBottom>
-        Admin Dashboard
-      </Typography>
-
-      <Grid container spacing={4}>
-        {/* Pie Chart for Users */}
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} style={{ padding: "20px" }}>
-            <Typography variant="h6" gutterBottom>
-              User Roles Distribution
-            </Typography>
-            <PieChart width={400} height={300}>
-              <Pie
-                data={userData}
-                cx={200}
-                cy={150}
-                labelLine={false}
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey="count"
-                nameKey="role"
-                label={(entry) => entry.role}
+    <Grid container spacing={2}>
+      <Grid
+        sx={{
+          boxShadow: "none",
+          paddingTop: "10px",
+          display: "flex", // Makes the Grid item itself flexible
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
+        spacing={5}
+        color="red"
+        container
+      >
+        {Object.entries(dashboardData.portalUsers.countByStatus).map(
+          ([status, count]) => (
+            <Grid item xs={12} sm={6} md={4} key={status}>
+              <Card
+                sx={{
+                  borderLeft: `6px solid ${
+                    UserStatStatusColors[status] || "#2196F3"
+                  }`,
+                  height: 150, // Increased card height
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
-                {userData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </Paper>
-        </Grid>
-
-        {/* Bar Chart for Customers */}
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} style={{ padding: "20px" }}>
-            <Typography variant="h6" gutterBottom>
-              Customer Status Distribution
-            </Typography>
-            <BarChart
-              width={400}
-              height={300}
-              data={customerData}
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            >
-              <XAxis dataKey="status" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="count" fill={theme.palette.primary.main} />
-            </BarChart>
-          </Paper>
-        </Grid>
+                <CardContent sx={{ textAlign: "center" }}>
+                  <Typography variant="h6">{status} Users</Typography>
+                  <Typography variant="h4" fontWeight="bold">
+                    {count}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          )
+        )}
       </Grid>
-    </Box>
+
+      <Grid
+        spacing={2}
+        sx={{
+          boxShadow: "none",
+          paddingTop: "10px",
+          display: "flex", // Makes the Grid item itself flexible
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
+        container
+      >
+        {Object.entries(dashboardData.users.countByStatus).map(
+          ([status, count]) => (
+            <Grid item xs={12} sm={6} md={4} key={status}>
+              <Card
+                sx={{
+                  borderLeft: `6px solid ${
+                    CustomerStatStatusColors[status] || "#2196F3"
+                  }`,
+                  height: 150, // Increased card height
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                <CardContent sx={{ textAlign: "center" }}>
+                  <Typography variant="h6">{status} Customers</Typography>
+                  <Typography variant="h4" fontWeight="bold">
+                    {count}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          )
+        )}
+      </Grid>
+
+      {/* Users by Role Pie Chart */}
+
+      <Grid spacing={2} item xs={12} md={6}>
+        <Card>
+          <CardContent>
+            <Typography variant="h6">Users by Role</Typography>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={preparePortalUserDataByRole(
+                    dashboardData.portalUsers.countByCategory
+                  )}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  fill="#82ca9d"
+                  dataKey="value"
+                >
+                  {preparePortalUserDataByRole(
+                    dashboardData.portalUsers.countByCategory
+                  ).map((_, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid item xs={12} md={6}>
+        <Card>
+          <CardContent>
+            <Typography variant="h6">User Creation Graph</Typography>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart
+                data={prepareLineData(dashboardData.portalUsers.countByDate)}
+              >
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="count"
+                  stroke="#0088FE"
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
   );
 };
 
